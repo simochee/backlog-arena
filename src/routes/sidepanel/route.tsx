@@ -7,7 +7,12 @@ export const Route = createFileRoute("/sidepanel")({
 function RouteComponent() {
 	return (
 		<div>
-			Hello "/sidepanel"!
+			<button
+				type="button"
+				onClick={() => browser.tabs.create({ url: "settings.html" })}
+			>
+				open settings
+			</button>
 			<Outlet />
 		</div>
 	);

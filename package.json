@@ -8,15 +8,28 @@
 		"dev": "wxt",
 		"postinstall": "lefthook install && wxt prepare"
 	},
+	"dependencies": {
+		"@tanstack/history": "^1.131.2",
+		"@tanstack/react-router": "^1.131.35",
+		"@tanstack/react-router-devtools": "^1.131.35",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.2",
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
+		"@tailwindcss/vite": "^4.1.13",
+		"@tanstack/router-plugin": "^1.131.35",
+		"@tsconfig/vite-react": "^7.0.0",
+		"@types/react": "^19.1.12",
+		"@types/react-dom": "^19.1.9",
 		"@wxt-dev/auto-icons": "^1.1.0",
 		"@wxt-dev/i18n": "^0.2.4",
 		"lefthook": "^1.12.3",
 		"semantic-release": "^24.2.7",
 		"sort-package-json": "^3.4.0",
+		"tailwindcss": "^4.1.13",
 		"wxt": "^0.20.8"
 	},
 	"packageManager": "pnpm@10.15.1+sha512.34e538c329b5553014ca8e8f4535997f96180a1d0f614339357449935350d924e22f8614682191264ec33d1462ac21561aff97f6bb18065351c162c7e8f6de67"

@@ -5,5 +5,5 @@ export const Route = createFileRoute("/sidepanel/")({
 });
 
 function RouteComponent() {
-	return <div>Hello "/sidepanel/"!</div>;
+	return <div>Hello "/sidepanel/"! im index.</div>;
 }

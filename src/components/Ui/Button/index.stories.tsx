@@ -1,12 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { UiModalDialog } from "./index";
+import { UiButton } from "./index";
 
-const meta: Meta<typeof UiModalDialog> = {
-	title: "Ui/Modal/Dialog",
-	component: UiModalDialog,
+const meta: Meta<typeof UiButton> = {
+	title: "Ui/Button",
+	component: UiButton,
 	tags: ["autodocs"],
-	args: { children: undefined },
+	args: {
+		children: "送信",
+	},
 	argTypes: {},
 };
 

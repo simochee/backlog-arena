@@ -7,8 +7,7 @@ const meta: Meta<typeof UiLink> = {
 	component: UiLink,
 	tags: ["autodocs"],
 	args: {
-		href: "https://tanstack.com/router/latest/docs/framework/react/guide/custom-link",
-		children: "react-aria-components の Link コンポーネント",
+		styled: true,
 	},
 	argTypes: {},
 };

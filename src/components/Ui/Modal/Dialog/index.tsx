@@ -8,7 +8,7 @@ export const UiModalDialog: React.FC<Props> = ({ children }) => {
 	return (
 		<Dialog>
 			<Heading>フロントエンド</Heading>
-			<Content>{children}</Content>
+			{children}
 			<Button>Cancel</Button>
 			<Button>Submit</Button>
 		</Dialog>

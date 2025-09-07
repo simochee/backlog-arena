@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { SettingsNav } from "./index";
+import { SettingsHeader } from "./index";
 
-const meta: Meta<typeof SettingsNav> = {
-	title: "Settings/Nav",
-	component: SettingsNav,
+const meta: Meta<typeof SettingsHeader> = {
+	title: "Settings/SettingsHeader",
+	component: SettingsHeader,
 	tags: ["autodocs"],
 	args: {},
 	argTypes: {},

@@ -9,8 +9,11 @@ export default defineConfig({
 		description: "__MSG_ext_description__",
 		action: {},
 		page_action: {},
-		permissions: ["alarms"],
+		permissions: ["alarms", "identity"],
+		// https://developer.chrome.com/docs/extensions/how-to/integrate/oauth
+		key: import.meta.env.CHROME_WEB_STORE_PUBLIC_KEY,
 	},
+	imports: false,
 	modules: ["@wxt-dev/i18n/module", "@wxt-dev/auto-icons"],
 	srcDir: "src",
 	vite: () => ({

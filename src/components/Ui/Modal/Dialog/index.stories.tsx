@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { SettingsHeader } from "./index";
+import { UiModalDialog } from "./index";
 
-const meta: Meta<typeof SettingsHeader> = {
-	title: "Settings/Header",
-	component: SettingsHeader,
+const meta: Meta<typeof UiModalDialog> = {
+	title: "Ui/Modal/Dialog",
+	component: UiModalDialog,
 	tags: ["autodocs"],
 	args: {},
 	argTypes: {},

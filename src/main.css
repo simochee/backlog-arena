@@ -1,2 +1,76 @@
 @import "tailwindcss";
 @plugin "tailwindcss-react-aria-components";
+
+@theme {
+    /* Disable Default Colors */
+    --color-*: initial;
+
+    /* Shamrock */
+    --color-green-50: #edfcf5;
+    --color-green-100: #d3f8e6;
+    --color-green-200: #abefd1;
+    --color-green-300: #74e1b8;
+    --color-green-400: #44cd9e;
+    --color-green-500: #19b081;
+    --color-green-600: #0c8f69;
+    --color-green-700: #0a7256;
+    --color-green-800: #0b5a46;
+    --color-green-900: #0a4a3a;
+    --color-green-950: #042a22;
+    /* Steel Blue */
+    --color-blue-50: #f2f7fc;
+    --color-blue-100: #e3edf6;
+    --color-blue-200: #cde1f0;
+    --color-blue-300: #aacde6;
+    --color-blue-400: #81b2d9;
+    --color-blue-500: #6498cd;
+    --color-blue-600: #4d7ebf;
+    --color-blue-700: #466daf;
+    --color-blue-800: #3d5b90;
+    --color-blue-900: #354c73;
+    --color-blue-950: #243047;
+    /* Storm Gray */
+    --color-gray-50: #f5f6f8;
+    --color-gray-100: #edeff2;
+    --color-gray-200: #dee1e7;
+    --color-gray-300: #caced7;
+    --color-gray-400: #b3b7c6;
+    --color-gray-500: #9fa2b5;
+    --color-gray-600: #898ba2;
+    --color-gray-700: #73748a;
+    --color-gray-800: #606073;
+    --color-gray-900: #51535e;
+    --color-gray-950: #2f2f37;
+    /* Chetwode Blue */
+    --color-purple-50: #eef0ff;
+    --color-purple-100: #e0e3ff;
+    --color-purple-200: #c7cafe;
+    --color-purple-300: #a6a9fb;
+    --color-purple-400: #8983f7;
+    --color-purple-500: #7564f0;
+    --color-purple-600: #6747e4;
+    --color-purple-700: #5939c9;
+    --color-purple-800: #4831a2;
+    --color-purple-900: #3e2f80;
+    --color-purple-950: #251b4b;
+    /* Bittersweet */
+    --color-red-50: #fff2f1;
+    --color-red-100: #ffe4e1;
+    --color-red-200: #ffcdc8;
+    --color-red-300: #ffa9a1;
+    --color-red-400: #fe6455;
+    --color-red-500: #f74d3c;
+    --color-red-600: #e4301e;
+    --color-red-700: #c02415;
+    --color-red-800: #9f2115;
+    --color-red-900: #832219;
+    --color-red-950: #480d07;
+
+    --font-sans: IBM Plex Sans JP, sans-serif;
+}
+
+@layer base {
+    * {
+        @apply font-sans;
+    }
+}

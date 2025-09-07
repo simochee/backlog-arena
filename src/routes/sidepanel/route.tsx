@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { browser } from "wxt/browser";
 
 export const Route = createFileRoute("/sidepanel")({
 	component: RouteComponent,

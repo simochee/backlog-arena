@@ -15,6 +15,7 @@ export type SpaceProfileConfiguration = Partial<{
 }>;
 
 export type SpaceProfile = {
+	id: string;
 	space: SpaceProfileSpace;
 	credentials: SpaceProfileCredentials;
 	configuration: SpaceProfileConfiguration;

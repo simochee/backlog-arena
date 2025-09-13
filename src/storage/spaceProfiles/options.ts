@@ -2,12 +2,12 @@ import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { Entity } from "backlog-js";
 import type { components } from "@/openapi/openapi-schema";
 import type { SpaceProfile } from "@/storage/spaceProfiles/types.ts";
-import { spaceProfileStorage } from "./storage";
+import { spaceProfilesStorage } from "./storage";
 
 export const spaceProfilesOptions = queryOptions({
 	queryKey: ["space-profiles"],
 	queryFn: async () => {
-		const storageValue = await spaceProfileStorage.getValue();
+		const storageValue = await spaceProfilesStorage.getValue();
 		return storageValue.spaceProfiles;
 	},
 });
@@ -22,9 +22,10 @@ export const addSpaceProfileOptions = mutationOptions({
 		space: components["schemas"]["Space"];
 		accessToken: Entity.OAuth2.AccessToken;
 	}) => {
-		const storageValue = await spaceProfileStorage.getValue();
+		const storageValue = await spaceProfilesStorage.getValue();
 
 		const spaceProfile: SpaceProfile = {
+			id: crypto.randomUUID(),
 			space: {
 				spaceKey: space.spaceKey,
 				name: space.name,
@@ -41,6 +42,6 @@ export const addSpaceProfileOptions = mutationOptions({
 		storageValue.spaceProfiles =
 			storageValue.spaceProfiles.concat(spaceProfile);
 
-		await spaceProfileStorage.setValue(storageValue);
+		await spaceProfilesStorage.setValue(storageValue);
 	},
 });

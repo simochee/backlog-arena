@@ -1,0 +1,115 @@
+openapi: 3.1.0
+info:
+  title: Backlog API
+  version: 2.113.3
+servers:
+  - url: https://example.backlog.com/api/v2
+    description: Backlog API
+components:
+  schemas:
+    Lang:
+      type: string
+      enum:
+        - ja
+        - en
+    NulabAccount:
+      type: object
+      properties:
+        nulabId:
+          type: string
+        name:
+          type: string
+        uniqueId:
+          type: string
+      required:
+        - nulabId
+        - name
+        - uniqueId
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: string
+        name:
+          type: string
+        roleType:
+          type: number
+        lang:
+          $ref: "#/components/schemas/Lang"
+        nulabAccount:
+          $ref: "#/components/schemas/NulabAccount"
+        mailAddress:
+          type: string
+        lastLoginTime:
+          type: string
+      required:
+        - id
+        - userId
+        - name
+        - roleType
+        - lang
+        - nulabAccount
+        - mailAddress
+        - lastLoginTime
+    TextFormattingRule:
+      type: string
+      enum:
+        - backlog
+        - markdown
+    Space:
+      type: object
+      properties:
+        spaceKey:
+          type: string
+        name:
+          type: string
+        ownerId:
+          type: number
+        lang:
+          $ref: "#/components/schemas/Lang"
+        timezone:
+          type: string
+        reportSendTime:
+          type: string
+        textFormattingRule:
+          $ref: "#/components/schemas/TextFormattingRule"
+        created:
+          type: string
+        updated:
+          type: string
+      required:
+        - spaceKey
+        - name
+        - ownerId
+        - lang
+        - timezone
+        - reportSendTime
+        - textFormattingRule
+        - created
+        - updated
+  parameters: {}
+paths:
+  /users/myself:
+    get:
+      description: 認証ユーザー情報の取得
+      summary: APIとの認証に使用しているユーザーの情報を取得します。
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+  /space:
+    get:
+      description: スペース情報の取得
+      summary: スペースの情報を取得します。
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Space"

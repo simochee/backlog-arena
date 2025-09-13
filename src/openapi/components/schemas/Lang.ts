@@ -1,3 +1,3 @@
 import * as z from "zod";
 
-export const Lang = z.union([z.literal("ja"), z.literal("en")]).openapi("Lang");
+export const Lang = z.enum(["ja", "en"]).openapi("Lang");

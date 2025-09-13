@@ -4,5 +4,5 @@ import * as z from "zod";
 extendZodWithOpenApi(z);
 
 export const TextFormattingRule = z
-	.union([z.literal("backlog"), z.literal("markdown")])
+	.enum(["backlog", "markdown"])
 	.openapi("TextFormattingRule");

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
-import { ListBox } from "react-aria-components";
+import { GridList } from "react-aria-components";
 import { NotificationItem } from "@/components/Notification/Item";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
 import type { paths } from "@/openapi/openapi-schema.ts";
@@ -60,9 +60,9 @@ function RouteComponent() {
 				alt=""
 				src={`https://${currentSpaceProfile.space.domain}/api/v2/space/image`}
 			/>
-			<ListBox items={data}>
+			<GridList items={data}>
 				{(notification) => <NotificationItem notification={notification} />}
-			</ListBox>
+			</GridList>
 		</div>
 	);
 }

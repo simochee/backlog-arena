@@ -1,9 +1,19 @@
+import {
+	IconCopy,
+	IconEyeX,
+	IconGitMerge,
+	IconGitPullRequestClosed,
+	IconGitPullRequestDraft,
+	IconMessage,
+	IconStar,
+} from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
-import { ListBoxItem } from "react-aria-components";
+import { Button, GridListItem } from "react-aria-components";
 import { UiDescription } from "@/components/Ui/Description";
+import { UiTooltip } from "@/components/Ui/Tooltip";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
 import { useCurrentSpaceUrl } from "@/hooks/useCurrentSpaceUrl.ts";
 import type { components, paths } from "@/openapi/openapi-schema.ts";
@@ -17,11 +27,13 @@ type Props = {
 const getStatusText = (reason: components["schemas"]["NotificationReason"]) => {
 	switch (reason) {
 		case 1:
+			return ["課題の", "担当者", "に設定しました。"];
 		case 10:
-			return ["", "担当者", "に設定しました。"];
+			return ["プルリクエストの", "担当者", "に設定しました。"];
 		case 2:
+			return ["課題に", "コメント", "しました。"];
 		case 11:
-			return ["", "コメント", "しました。"];
+			return ["プルリクエストに", "コメント", "しました。"];
 		case 3:
 			return ["課題を", "追加", "しました。"];
 		case 4:
@@ -87,7 +99,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		{
 			params: {
 				path: {
-					projectIdOrKey: notification.project.projectKey,
+					projectIdOrKey: project.projectKey,
 				},
 			},
 		},
@@ -108,7 +120,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		: `${issue?.issueKey} ${issue?.summary}`;
 
 	return (
-		<ListBoxItem
+		<GridListItem
 			id={notification.id}
 			href={toUrl(`/globalbar/notifications/redirect/${notification.id}`)}
 			target="_blank"
@@ -117,55 +129,121 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 				notification.resourceAlreadyRead ? "bg-gray-100" : "",
 			)}
 		>
-			<div className="grid grid-cols-[auto_1fr] items-center gap-1">
-				<img
-					className="size-5 rounded"
-					src="https://placehold.jp/320x320.png"
-					alt=""
-				/>
-				<p className="line-clamp-1 text-gray-600 text-xs">
-					{sender.name} さんが{reasonText[0]}{" "}
-					<span className={isPullRequest ? "text-red-500" : "text-green-500"}>
-						{reasonText[1]}
-					</span>{" "}
-					{reasonText[2]}
-				</p>
-			</div>
-			<p className="line-clamp-1 text-sm min-h-[1.5em]">
-				{
-					// プロジェクト追加
-					reason === 6 ? (
-						`${project.name} (${project.projectKey})`
-					) : // コメント
-					[2, 11].includes(reason) ? (
-						<UiDescription>
-							{comment?.content || pullRequestComment?.content}
-						</UiDescription>
-					) : // 課題・プルリクエストの追加・更新
-					[3, 4, 12, 13].includes(reason) ? (
-						<UiDescription>
-							{issue?.description || pullRequest?.description}
-						</UiDescription>
-					) : (
-						issue?.summary || pullRequest?.summary
-					)
-				}
-			</p>
-			{reason !== 6 && (
-				<p className="grid grid-cols-[auto_1fr] gap-1 items-center">
-					<img
-						className="size-4 rounded"
-						src="https://placehold.jp/320x320.png"
-						alt=""
-					/>
-					<span className="line-clamp-1 text-gray-600 text-xs">
-						{[2, 3, 4, 11, 12, 13].includes(reason)
-							? subject
-							: issue?.issueKey ||
-								`${project.projectKey}/${repository?.name}#${pullRequest?.number}`}
-					</span>
-				</p>
+			{({ isHovered }) => (
+				<>
+					<div className="grid h-6 grid-cols-[auto_1fr_auto] items-center gap-1">
+						<UiTooltip text={sender.name} nonInteractive>
+							<img
+								className="size-5 rounded"
+								src="https://placehold.jp/320x320.png"
+								alt=""
+							/>
+						</UiTooltip>
+						<p className="line-clamp-1 text-gray-600 text-xs">
+							{reasonText[0]}{" "}
+							<span
+								className={isPullRequest ? "text-red-500" : "text-green-500"}
+							>
+								{reasonText[1]}
+							</span>{" "}
+							{reasonText[2]}
+						</p>
+						{isHovered ? (
+							<div className="flex items-center gap-1">
+								<UiTooltip text="課題キーと件名をコピーする">
+									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
+										<IconCopy className="size-4" />
+									</Button>
+								</UiTooltip>
+								<UiTooltip text="コメントを返信する">
+									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
+										<IconMessage className="size-4" />
+									</Button>
+								</UiTooltip>
+								<UiTooltip text="スターをつける">
+									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
+										<IconStar className="size-4" />
+									</Button>
+								</UiTooltip>
+								<UiTooltip text="既読にする">
+									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
+										<IconEyeX className="size-4" />
+									</Button>
+								</UiTooltip>
+							</div>
+						) : (
+							<div>
+								<p>20:30</p>
+							</div>
+						)}
+					</div>
+					<p className="line-clamp-1 text-sm min-h-[1.5em]">
+						{
+							// プロジェクト追加
+							reason === 6 ? (
+								`${project.name} (${project.projectKey})`
+							) : // コメント
+							[2, 11].includes(reason) ? (
+								<UiDescription>
+									{comment?.content || pullRequestComment?.content}
+								</UiDescription>
+							) : // 課題・プルリクエストの追加・更新
+							[3, 4, 12, 13].includes(reason) ? (
+								<UiDescription>
+									{issue?.description || pullRequest?.description}
+								</UiDescription>
+							) : (
+								issue?.summary || pullRequest?.summary
+							)
+						}
+					</p>
+					{reason !== 6 && (
+						<div className="grid grid-cols-[1fr_auto] items-center gap-1">
+							<p className="grid grid-cols-[auto_1fr] gap-1 items-center">
+								<UiTooltip text={subject} nonInteractive>
+									<img
+										className="size-4 rounded"
+										src="https://placehold.jp/320x320.png"
+										alt=""
+									/>
+								</UiTooltip>
+								<span className="line-clamp-1 text-gray-600 text-xs">
+									{[2, 3, 4, 11, 12, 13].includes(reason)
+										? subject
+										: issue?.issueKey ||
+											`${project.projectKey}/${repository?.name}#${pullRequest?.number}`}
+								</span>
+							</p>
+							{issue ? (
+								<p
+									className="line-clamp-1 rounded px-1 text-xs leading-tight text-white"
+									style={{
+										backgroundColor: issue?.status.color,
+									}}
+								>
+									{issue?.status.name}
+								</p>
+							) : pullRequest ? (
+								<p
+									className={clsx({
+										"text-red-500": pullRequest.status.id === 1,
+										"text-gray-700": pullRequest.status.id === 2,
+										"text-green-500": pullRequest.status.id === 3,
+									})}
+								>
+									{pullRequest.status.id === 1 ? (
+										<IconGitPullRequestDraft className="size-4" />
+									) : pullRequest.status.id === 2 ? (
+										<IconGitPullRequestClosed className="size-4" />
+									) : (
+										<IconGitMerge className="size-4" />
+									)}
+								</p>
+							) : null}
+						</div>
+					)}
+				</>
 			)}
-		</ListBoxItem>
+		</GridListItem>
 	);
 };

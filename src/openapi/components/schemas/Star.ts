@@ -4,7 +4,7 @@ import { User } from "@/openapi/components/schemas/User.ts";
 export const Star = z
 	.object({
 		id: z.number(),
-		comment: z.string().openapi(),
+		comment: z.string().optional(),
 		url: z.string(),
 		title: z.string(),
 		presenter: User,

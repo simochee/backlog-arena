@@ -89,6 +89,499 @@ components:
         - textFormattingRule
         - created
         - updated
+    NotificationReason:
+      type: integer
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 9
+        - 10
+        - 11
+        - 12
+        - 13
+    Project:
+      type: object
+      properties:
+        id:
+          type: number
+        projectKey:
+          type: string
+        name:
+          type: string
+        chartEnabled:
+          type: boolean
+        useResolvedForChart:
+          type: boolean
+        subtaskingEnabled:
+          type: boolean
+        projectLeaderCanEditProjectLeader:
+          type: boolean
+        useWiki:
+          type: boolean
+        useFileSharing:
+          type: boolean
+        useWikiTreeView:
+          type: boolean
+        useOriginalImageSizeAtWiki:
+          type: boolean
+        useSubversion:
+          type: boolean
+        useGit:
+          type: boolean
+        textFormattingRule:
+          $ref: "#/components/schemas/TextFormattingRule"
+        archived:
+          type: boolean
+        displayOrder:
+          type: number
+        useDevAttributes:
+          type: boolean
+      required:
+        - id
+        - projectKey
+        - name
+        - chartEnabled
+        - useResolvedForChart
+        - subtaskingEnabled
+        - projectLeaderCanEditProjectLeader
+        - useWiki
+        - useFileSharing
+        - useWikiTreeView
+        - useOriginalImageSizeAtWiki
+        - useSubversion
+        - useGit
+        - textFormattingRule
+        - archived
+        - displayOrder
+        - useDevAttributes
+    IssueTypeColor:
+      type: string
+      enum:
+        - "#e30000"
+        - "#990000"
+        - "#934981"
+        - "#814fbc"
+        - "#2779ca"
+        - "#007e9a"
+        - "#7ea800"
+        - "#ff9200"
+        - "#ff3265"
+        - "#666665"
+    IssueType:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        name:
+          type: string
+        color:
+          $ref: "#/components/schemas/IssueTypeColor"
+        displayOrder:
+          type: number
+        templateSummary:
+          type: string
+        templateDescription:
+          type: string
+      required:
+        - id
+        - projectId
+        - name
+        - color
+        - displayOrder
+    Resolution:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+      required:
+        - id
+        - name
+    Priority:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+      required:
+        - id
+        - name
+    ProjectStatus:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        name:
+          type: string
+        color:
+          type: string
+          enum:
+            - "#ea2c00"
+            - "#e87758"
+            - "#e07b9a"
+            - "#868cb7"
+            - "#3b9dbd"
+            - "#4caf93"
+            - "#b0be3c"
+            - "#eda62a"
+            - "#f42858"
+            - "#393939"
+        displayOrder:
+          type: number
+      required:
+        - id
+        - projectId
+        - name
+        - color
+        - displayOrder
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        name:
+          type: string
+        displayOrder:
+          type: number
+      required:
+        - id
+        - projectId
+        - name
+        - displayOrder
+    Version:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        name:
+          type: string
+        displayOrder:
+          type: number
+      required:
+        - id
+        - projectId
+        - name
+        - displayOrder
+    FileInfo:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        size:
+          type: number
+      required:
+        - id
+        - name
+        - size
+    SharedFile:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        type:
+          type: string
+        dir:
+          type: string
+        name:
+          type: string
+        size:
+          type: number
+        createdUser:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+        updatedUser:
+          $ref: "#/components/schemas/User"
+        updated:
+          type: string
+      required:
+        - id
+        - projectId
+        - type
+        - dir
+        - name
+        - size
+        - createdUser
+        - created
+        - updatedUser
+        - updated
+    Star:
+      type: object
+      properties:
+        id:
+          type: number
+        comment:
+          type: string
+        url:
+          type: string
+        title:
+          type: string
+        presenter:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+      required:
+        - id
+        - comment
+        - url
+        - title
+        - presenter
+        - created
+    Issue:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        issueKey:
+          type: string
+        keyId:
+          type: number
+        issueType:
+          $ref: "#/components/schemas/IssueType"
+        summary:
+          type: string
+        description:
+          type: string
+        resolution:
+          $ref: "#/components/schemas/Resolution"
+        priority:
+          $ref: "#/components/schemas/Priority"
+        status:
+          $ref: "#/components/schemas/ProjectStatus"
+        assignee:
+          $ref: "#/components/schemas/User"
+        category:
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+        versions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Version"
+        milestone:
+          type: array
+          items:
+            $ref: "#/components/schemas/Version"
+        startDate:
+          type: string
+        dueDate:
+          type: string
+        estimatedHours:
+          type: number
+        actualHours:
+          type: number
+        parentIssueId:
+          type: number
+        createdUser:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+        updatedUser:
+          $ref: "#/components/schemas/User"
+        updated:
+          type: string
+        customFields:
+          type: array
+          items:
+            nullable: true
+        attachments:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/FileInfo"
+              - type: object
+                properties:
+                  createdUser:
+                    $ref: "#/components/schemas/User"
+                  created:
+                    type: string
+                required:
+                  - createdUser
+                  - created
+        sharedFiles:
+          type: array
+          items:
+            $ref: "#/components/schemas/SharedFile"
+        stars:
+          type: array
+          items:
+            $ref: "#/components/schemas/Star"
+      required:
+        - id
+        - projectId
+        - issueKey
+        - keyId
+        - issueType
+        - summary
+        - description
+        - status
+        - category
+        - versions
+        - milestone
+        - startDate
+        - dueDate
+        - createdUser
+        - created
+        - updatedUser
+        - updated
+        - customFields
+        - attachments
+        - sharedFiles
+        - stars
+    AttachmentInfo:
+      type: object
+      properties:
+        id:
+          type: number
+        type:
+          type: string
+      required:
+        - id
+        - type
+    NotificationInfo:
+      type: object
+      properties:
+        type:
+          type: string
+      required:
+        - type
+    CommentNotification:
+      type: object
+      properties:
+        id:
+          type: number
+        alreadyRead:
+          type: boolean
+        reason:
+          type: number
+        user:
+          $ref: "#/components/schemas/User"
+        resourceAlreadyRead:
+          type: boolean
+      required:
+        - id
+        - alreadyRead
+        - reason
+        - user
+        - resourceAlreadyRead
+    Notification:
+      type: object
+      properties:
+        id:
+          type: number
+        alreadyRead:
+          type: boolean
+        reason:
+          $ref: "#/components/schemas/NotificationReason"
+        resourceAlreadyRead:
+          type: boolean
+        project:
+          $ref: "#/components/schemas/Project"
+        issue:
+          $ref: "#/components/schemas/Issue"
+        comment:
+          type: object
+          properties:
+            id:
+              type: number
+            projectId:
+              type: number
+            issueId:
+              type: number
+            content:
+              type: string
+            changeLog:
+              type: object
+              properties:
+                field:
+                  type: string
+                newValue:
+                  type: string
+                originalValue:
+                  type: string
+                attachmentInfo:
+                  $ref: "#/components/schemas/AttachmentInfo"
+                attributeInfo:
+                  allOf:
+                    - $ref: "#/components/schemas/AttachmentInfo"
+                    - properties:
+                        id:
+                          type: number
+                        typeId:
+                          type: number
+                      required:
+                        - id
+                        - typeId
+                notificationInfo:
+                  $ref: "#/components/schemas/NotificationInfo"
+              required:
+                - field
+                - newValue
+                - originalValue
+                - attachmentInfo
+                - attributeInfo
+                - notificationInfo
+            createdUser:
+              $ref: "#/components/schemas/User"
+            created:
+              type: string
+            updated:
+              type: string
+            stars:
+              type: array
+              items:
+                $ref: "#/components/schemas/Star"
+            notifications:
+              type: array
+              items:
+                $ref: "#/components/schemas/CommentNotification"
+          required:
+            - id
+            - projectId
+            - issueId
+            - content
+            - changeLog
+            - createdUser
+            - created
+            - updated
+            - stars
+            - notifications
+        pullRequest:
+          nullable: true
+        pullRequestComment:
+          nullable: true
+        sender:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+      required:
+        - id
+        - alreadyRead
+        - reason
+        - resourceAlreadyRead
+        - project
+        - sender
+        - created
   parameters: {}
 paths:
   /users/myself:
@@ -113,3 +606,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Space"
+  /notifications:
+    get:
+      description: お知らせ一覧の取得
+      summary: 自分の受け取ったお知らせの一覧を取得します。
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"

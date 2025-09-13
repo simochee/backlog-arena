@@ -1,18 +1,18 @@
 import type { RouteConfig } from "@asteasolutions/zod-to-openapi";
-import { Space } from "@/openapi/components/schemas/Space.ts";
+import { User } from "@/openapi/components/schemas/User";
 
 export default {
 	method: "get",
-	path: "/space",
-	description: "スペース情報の取得",
-	summary: "スペースの情報を取得します。",
+	path: "/users/myself",
+	description: "認証ユーザー情報の取得",
+	summary: "APIとの認証に使用しているユーザーの情報を取得します。",
 	request: {},
 	responses: {
 		200: {
 			description: "レスポンスボディ",
 			content: {
 				"application/json": {
-					schema: Space,
+					schema: User,
 				},
 			},
 		},

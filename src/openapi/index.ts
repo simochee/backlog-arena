@@ -1,9 +1,13 @@
 import { glob } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import {
+	extendZodWithOpenApi,
 	OpenAPIRegistry,
 	OpenApiGeneratorV3,
 } from "@asteasolutions/zod-to-openapi";
+import * as z from "zod";
+
+extendZodWithOpenApi(z);
 
 const registry = new OpenAPIRegistry();
 
@@ -29,4 +33,4 @@ const document = generator.generateDocument({
 	],
 });
 
-console.log(document);
+console.log(JSON.stringify(document, null, 2));

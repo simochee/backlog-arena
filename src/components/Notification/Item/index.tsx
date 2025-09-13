@@ -8,18 +8,14 @@ import {
 	IconStar,
 	IconStarFilled,
 } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import createFetchClient from "openapi-fetch";
-import createClient from "openapi-react-query";
 import { Button, GridListItem } from "react-aria-components";
 import { UiDescription } from "@/components/Ui/Description";
 import { UiTooltip } from "@/components/Ui/Tooltip";
+import { useApi } from "@/hooks/useApi.ts";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
 import { useCurrentSpaceUrl } from "@/hooks/useCurrentSpaceUrl.ts";
-import type { components, paths } from "@/openapi/openapi-schema.ts";
-import { setSpaceProfileCredentialsOptions } from "@/storage/spaceProfiles/options.ts";
-import { refreshAccessToken } from "@/utils/authorize.ts";
+import type { components } from "@/openapi/openapi-schema.ts";
 
 type Props = {
 	notification: components["schemas"]["Notification"];
@@ -66,34 +62,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		sender,
 	} = notification;
 
-	const { mutate } = useMutation(
-		setSpaceProfileCredentialsOptions(currentSpaceProfile.id),
-	);
-	const fetchClient = createFetchClient<paths>({
-		baseUrl: `https://${currentSpaceProfile.space.domain}/api/v2`,
-		headers: {
-			Authorization: `Bearer ${currentSpaceProfile.credentials.accessToken}`,
-		},
-		fetch: async (init) => {
-			const res = await fetch(init);
-
-			if (res.status !== 401) {
-				return res;
-			}
-
-			const accessToken = await refreshAccessToken(
-				currentSpaceProfile.space.domain,
-				currentSpaceProfile.credentials.refreshToken,
-			);
-			mutate(accessToken);
-
-			init.headers.set("Authorization", `Bearer ${accessToken.access_token}`);
-
-			return await fetch(init);
-		},
-	});
-	const $api = createClient(fetchClient);
-
+	const { $api } = useApi();
 	const { data: repositories = [] } = $api.useQuery(
 		"get",
 		"/projects/{projectIdOrKey}/git/repositories",

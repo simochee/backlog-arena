@@ -9,7 +9,7 @@ export default defineConfig({
 		description: "__MSG_ext_description__",
 		action: {},
 		page_action: {},
-		permissions: ["alarms", "identity"],
+		permissions: ["alarms", "identity", "storage"],
 		// https://developer.chrome.com/docs/extensions/how-to/integrate/oauth
 		key: import.meta.env.CHROME_WEB_STORE_PUBLIC_KEY,
 	},

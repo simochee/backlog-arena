@@ -1,6 +1,6 @@
 export type SpaceProfileSpace = {
-	id: number;
 	spaceKey: string;
+	domain: string;
 	name: string;
 };
 

@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { browser } from "wxt/browser";
 import { SettingsHeader } from "@/features/settings/components/SettingsHeader";
 import { SettingsNav } from "@/features/settings/components/SettingsNav";
 
@@ -8,8 +7,6 @@ export const Route = createFileRoute("/(settings)")({
 });
 
 function RouteComponent() {
-	console.log(browser.identity.getRedirectURL());
-
 	return (
 		<div className="grid gap-5 py-8 max-w-2xl mx-auto">
 			<SettingsHeader />

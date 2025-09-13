@@ -1,7 +1,7 @@
 {
 	"extends": ["./.wxt/tsconfig.json", "@tsconfig/vite-react"],
 	"compilerOptions": {
-		"types": ["vite/client", "node"]
+		"types": ["./.wxt/wxt", "vite/client", "node"]
 	},
 	"include": [".storybook", "src"]
 }

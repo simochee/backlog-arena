@@ -1,5 +1,7 @@
 import { OAuth2 } from "backlog-js";
+import createFetchClient from "openapi-fetch";
 import { browser } from "wxt/browser";
+import type { paths } from "@/openapi/openapi-schema";
 
 const oauth2 = new OAuth2({
 	clientId: import.meta.env.VITE_OAUTH2_CLIENT_ID,
@@ -50,5 +52,18 @@ export const authorize = async (domain: string) => {
 		code,
 	});
 
-	return accessToken;
+	const fetchClient = createFetchClient<paths>({
+		baseUrl: `https://${domain}/api/v2`,
+	});
+	const { data: space } = await fetchClient.GET("/space", {
+		headers: {
+			Authorization: `Bearer ${accessToken.access_token}`,
+		},
+	});
+
+	if (!space) {
+		throw new Error(`Invalid space: ${accessToken.access_token}`);
+	}
+
+	return { space, accessToken };
 };

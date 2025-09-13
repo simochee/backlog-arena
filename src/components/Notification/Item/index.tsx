@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import { ListBoxItem } from "react-aria-components";
+import { UiDescription } from "@/components/Ui/Description";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
 import { useCurrentSpaceUrl } from "@/hooks/useCurrentSpaceUrl.ts";
 import type { components, paths } from "@/openapi/openapi-schema.ts";
@@ -42,7 +43,15 @@ const getStatusText = (reason: components["schemas"]["NotificationReason"]) => {
 
 export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const currentSpaceProfile = useCurrentSpaceProfile();
-	const { reason, pullRequest, issue, project, comment, sender } = notification;
+	const {
+		reason,
+		pullRequest,
+		pullRequestComment,
+		issue,
+		project,
+		comment,
+		sender,
+	} = notification;
 
 	const { mutate } = useMutation(
 		setSpaceProfileCredentialsOptions(currentSpaceProfile.id),
@@ -122,17 +131,40 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 					{reasonText[2]}
 				</p>
 			</div>
-			{reason === 6 ? (
-				<p className="line-clamp-1 text-sm">
-					{project.name} ({project.projectKey})
+			<p className="line-clamp-1 text-sm min-h-[1.5em]">
+				{
+					// プロジェクト追加
+					reason === 6 ? (
+						`${project.name} (${project.projectKey})`
+					) : // コメント
+					[2, 11].includes(reason) ? (
+						<UiDescription>
+							{comment?.content || pullRequestComment?.content}
+						</UiDescription>
+					) : // 課題・プルリクエストの追加・更新
+					[3, 4, 12, 13].includes(reason) ? (
+						<UiDescription>
+							{issue?.description || pullRequest?.description}
+						</UiDescription>
+					) : (
+						issue?.summary || pullRequest?.summary
+					)
+				}
+			</p>
+			{reason !== 6 && (
+				<p className="grid grid-cols-[auto_1fr] gap-1 items-center">
+					<img
+						className="size-4 rounded"
+						src="https://placehold.jp/320x320.png"
+						alt=""
+					/>
+					<span className="line-clamp-1 text-gray-600 text-xs">
+						{[2, 3, 4, 11, 12, 13].includes(reason)
+							? subject
+							: issue?.issueKey ||
+								`${project.projectKey}/${repository?.name}#${pullRequest?.number}`}
+					</span>
 				</p>
-			) : (
-				<>
-					<p className="line-clamp-1 text-sm">{comment?.content ?? subject}</p>
-					{comment?.content && (
-						<p className="line-clamp-1 text-gray-600 text-xs">{subject}</p>
-					)}
-				</>
 			)}
 		</ListBoxItem>
 	);

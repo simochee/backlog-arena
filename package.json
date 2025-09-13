@@ -11,6 +11,7 @@
 		"storybook": "storybook dev -p 6006"
 	},
 	"dependencies": {
+		"@asteasolutions/zod-to-openapi": "^8.1.0",
 		"@fontsource/ibm-plex-sans-jp": "^5.2.6",
 		"@tabler/icons-react": "^3.34.1",
 		"@tanstack/history": "^1.131.2",
@@ -21,7 +22,8 @@
 		"react": "^19.1.1",
 		"react-aria-components": "^1.12.1",
 		"react-dom": "^19.1.1",
-		"tailwindcss-react-aria-components": "^2.0.1"
+		"tailwindcss-react-aria-components": "^2.0.1",
+		"zod": "^4.1.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.2",
@@ -36,6 +38,7 @@
 		"@tailwindcss/vite": "^4.1.13",
 		"@tanstack/router-plugin": "^1.131.35",
 		"@tsconfig/vite-react": "^7.0.0",
+		"@types/node": "^24.3.3",
 		"@types/react": "^19.1.12",
 		"@types/react-dom": "^19.1.9",
 		"@vitest/browser": "^3.2.4",

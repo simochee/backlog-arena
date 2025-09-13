@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { ErrorBoundary } from "react-error-boundary";
 import { browser } from "wxt/browser";
 
 export const Route = createFileRoute("/sidepanel")({
@@ -14,7 +15,9 @@ function RouteComponent() {
 			>
 				open settings
 			</button>
-			<Outlet />
+			<ErrorBoundary fallback={<p>エラーです！</p>}>
+				<Outlet />
+			</ErrorBoundary>
 		</div>
 	);
 }

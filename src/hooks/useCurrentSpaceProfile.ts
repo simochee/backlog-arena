@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { currentSpaceProfileOptions } from "@/storage/currentSpaceProfile/options.ts";
 import { currentSpaceProfileStorage } from "@/storage/currentSpaceProfile/storage.ts";
@@ -6,7 +6,7 @@ import { spaceProfilesStorage } from "@/storage/spaceProfiles/storage.ts";
 
 export const useCurrentSpaceProfile = () => {
 	const queryClient = useQueryClient();
-	const { data } = useQuery(currentSpaceProfileOptions);
+	const { data } = useSuspenseQuery(currentSpaceProfileOptions);
 
 	useEffect(() => {
 		return currentSpaceProfileStorage.watch(async () => {

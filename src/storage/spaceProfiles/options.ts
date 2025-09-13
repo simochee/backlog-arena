@@ -13,15 +13,12 @@ export const spaceProfilesOptions = queryOptions({
 });
 
 export const addSpaceProfileOptions = mutationOptions({
-	mutationFn: async ({
-		domain,
-		space,
-		accessToken,
-	}: {
+	mutationFn: async (variables: {
 		domain: string;
 		space: components["schemas"]["Space"];
 		accessToken: Entity.OAuth2.AccessToken;
 	}) => {
+		const { domain, space, accessToken } = variables;
 		const storageValue = await spaceProfilesStorage.getValue();
 
 		const spaceProfile: SpaceProfile = {
@@ -45,3 +42,27 @@ export const addSpaceProfileOptions = mutationOptions({
 		await spaceProfilesStorage.setValue(storageValue);
 	},
 });
+
+export const setSpaceProfileCredentialsOptions = (spaceProfileId: string) =>
+	mutationOptions({
+		mutationFn: async (accessToken: Entity.OAuth2.AccessToken) => {
+			if (!spaceProfileId) return;
+
+			const storageValue = await spaceProfilesStorage.getValue();
+
+			storageValue.spaceProfiles = storageValue.spaceProfiles.map(
+				(spaceProfile) => {
+					if (spaceProfile.id !== spaceProfileId) return spaceProfile;
+
+					spaceProfile.credentials = {
+						authType: "Bearer",
+						accessToken: accessToken.access_token,
+						refreshToken: accessToken.refresh_token,
+					};
+					return spaceProfile;
+				},
+			);
+
+			await spaceProfilesStorage.setValue(storageValue);
+		},
+	});

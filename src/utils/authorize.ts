@@ -67,3 +67,13 @@ export const authorize = async (domain: string) => {
 
 	return { space, accessToken };
 };
+
+export const refreshAccessToken = async (
+	domain: string,
+	refreshToken: string,
+) => {
+	return await oauth2.refreshAccessToken({
+		host: domain,
+		refreshToken,
+	});
+};

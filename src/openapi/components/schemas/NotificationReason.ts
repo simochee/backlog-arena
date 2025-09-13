@@ -1,17 +1,17 @@
 import * as z from "zod";
 
 enum NotificationReasonEnum {
-	SetIssueAssignee = 1,
-	AddIssueComment = 2,
-	AddIssue = 3,
-	UpdateIssue = 4,
-	AddFile = 5,
-	AddProjectUser = 6,
+	AssignedToIssue = 1,
+	IssueCommented = 2,
+	IssueCreated = 3,
+	IssueUpdated = 4,
+	FileAdded = 5,
+	ProjectUserAdded = 6,
 	Other = 9,
-	SetPullRequestAssignee = 10,
-	AddPullRequestComment = 11,
-	AddPullRequest = 12,
-	UpdatePullRequest = 13,
+	AssignedToPullRequest = 10,
+	PullRequestCommented = 11,
+	PullRequestCreated = 12,
+	PullRequestUpdated = 13,
 }
 
 export const NotificationReason = z

@@ -438,8 +438,6 @@ components:
         - category
         - versions
         - milestone
-        - startDate
-        - dueDate
         - createdUser
         - created
         - updatedUser
@@ -484,6 +482,163 @@ components:
         - reason
         - user
         - resourceAlreadyRead
+    Comment:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        issueId:
+          type: number
+        content:
+          type: string
+        changeLog:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              newValue:
+                type: string
+              originalValue:
+                type: string
+              attachmentInfo:
+                $ref: "#/components/schemas/AttachmentInfo"
+              attributeInfo:
+                allOf:
+                  - $ref: "#/components/schemas/AttachmentInfo"
+                  - properties:
+                      id:
+                        type: number
+                      typeId:
+                        type: number
+                    required:
+                      - id
+                      - typeId
+              notificationInfo:
+                $ref: "#/components/schemas/NotificationInfo"
+            required:
+              - field
+              - newValue
+              - originalValue
+              - attachmentInfo
+              - attributeInfo
+              - notificationInfo
+        createdUser:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+        updated:
+          type: string
+        stars:
+          type: array
+          items:
+            $ref: "#/components/schemas/Star"
+        notifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/CommentNotification"
+      required:
+        - id
+        - projectId
+        - issueId
+        - content
+        - changeLog
+        - createdUser
+        - created
+        - updated
+        - stars
+        - notifications
+    PullRequestStatus:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+      required:
+        - id
+        - name
+    PullRequest:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        repositoryId:
+          type: number
+        number:
+          type: number
+        summary:
+          type: string
+        description:
+          type: string
+        base:
+          type: string
+        branch:
+          type: string
+        status:
+          $ref: "#/components/schemas/PullRequestStatus"
+        assignee:
+          $ref: "#/components/schemas/User"
+        issue:
+          $ref: "#/components/schemas/Issue"
+        baseCommit:
+          type: string
+        branchCommit:
+          type: string
+        mergeCommit:
+          type: string
+        closeAt:
+          type: string
+        mergeAt:
+          type: string
+        createdUser:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+        updatedUser:
+          $ref: "#/components/schemas/User"
+        updated:
+          type: string
+        attachments:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/FileInfo"
+              - type: object
+                properties:
+                  createdUser:
+                    $ref: "#/components/schemas/User"
+                  created:
+                    type: string
+                required:
+                  - createdUser
+                  - created
+        stars:
+          type: array
+          items:
+            $ref: "#/components/schemas/Star"
+      required:
+        - id
+        - projectId
+        - repositoryId
+        - number
+        - summary
+        - description
+        - base
+        - branch
+        - status
+        - issue
+        - createdUser
+        - created
+        - updatedUser
+        - updated
+        - attachments
+        - stars
     Notification:
       type: object
       properties:
@@ -500,47 +655,31 @@ components:
         issue:
           $ref: "#/components/schemas/Issue"
         comment:
+          $ref: "#/components/schemas/Comment"
+        pullRequest:
+          $ref: "#/components/schemas/PullRequest"
+        pullRequestComment:
           type: object
           properties:
             id:
               type: number
-            projectId:
-              type: number
-            issueId:
-              type: number
             content:
               type: string
             changeLog:
-              type: object
-              properties:
-                field:
-                  type: string
-                newValue:
-                  type: string
-                originalValue:
-                  type: string
-                attachmentInfo:
-                  $ref: "#/components/schemas/AttachmentInfo"
-                attributeInfo:
-                  allOf:
-                    - $ref: "#/components/schemas/AttachmentInfo"
-                    - properties:
-                        id:
-                          type: number
-                        typeId:
-                          type: number
-                      required:
-                        - id
-                        - typeId
-                notificationInfo:
-                  $ref: "#/components/schemas/NotificationInfo"
-              required:
-                - field
-                - newValue
-                - originalValue
-                - attachmentInfo
-                - attributeInfo
-                - notificationInfo
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  newValue:
+                    type: string
+                  originalValue:
+                    type: string
+                required:
+                  - field
+                  - newValue
+                  - originalValue
             createdUser:
               $ref: "#/components/schemas/User"
             created:
@@ -557,8 +696,6 @@ components:
                 $ref: "#/components/schemas/CommentNotification"
           required:
             - id
-            - projectId
-            - issueId
             - content
             - changeLog
             - createdUser
@@ -566,10 +703,6 @@ components:
             - updated
             - stars
             - notifications
-        pullRequest:
-          nullable: true
-        pullRequestComment:
-          nullable: true
         sender:
           $ref: "#/components/schemas/User"
         created:
@@ -606,6 +739,64 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Space"
+  /projects/{projectIdOrKey}/git/repositories:
+    get:
+      description: Gitリポジトリ一覧の取得
+      summary: Gitリポジトリの一覧を取得します。
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: projectIdOrKey
+          in: path
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    projectId:
+                      type: number
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    hookUrl:
+                      type: string
+                    httpUrl:
+                      type: string
+                    sshUrl:
+                      type: string
+                    displayOrder:
+                      type: number
+                    pushedAt:
+                      type: string
+                    createdUser:
+                      $ref: "#/components/schemas/User"
+                    created:
+                      type: string
+                    updatedUser:
+                      $ref: "#/components/schemas/User"
+                    updated:
+                      type: string
+                  required:
+                    - id
+                    - projectId
+                    - name
+                    - description
+                    - httpUrl
+                    - sshUrl
+                    - displayOrder
+                    - createdUser
+                    - created
+                    - updatedUser
+                    - updated
   /notifications:
     get:
       description: お知らせ一覧の取得

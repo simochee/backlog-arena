@@ -77,6 +77,61 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
+	"/projects/{projectIdOrKey}/git/repositories": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		/**
+		 * Gitリポジトリの一覧を取得します。
+		 * @description Gitリポジトリ一覧の取得
+		 */
+		get: {
+			parameters: {
+				query?: never;
+				header?: never;
+				path: {
+					projectIdOrKey: string;
+				};
+				cookie?: never;
+			};
+			requestBody?: never;
+			responses: {
+				/** @description レスポンスボディ */
+				200: {
+					headers: {
+						[name: string]: unknown;
+					};
+					content: {
+						"application/json": {
+							id: number;
+							projectId: number;
+							name: string;
+							description: string;
+							hookUrl?: string;
+							httpUrl: string;
+							sshUrl: string;
+							displayOrder: number;
+							pushedAt?: string;
+							createdUser: components["schemas"]["User"];
+							created: string;
+							updatedUser: components["schemas"]["User"];
+							updated: string;
+						}[];
+					};
+				};
+			};
+		};
+		put?: never;
+		post?: never;
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 	"/notifications": {
 		parameters: {
 			query?: never;
@@ -270,8 +325,8 @@ export interface components {
 			category: components["schemas"]["Category"][];
 			versions: components["schemas"]["Version"][];
 			milestone: components["schemas"]["Version"][];
-			startDate: string;
-			dueDate: string;
+			startDate?: string;
+			dueDate?: string;
 			estimatedHours?: number;
 			actualHours?: number;
 			parentIssueId?: number;
@@ -301,6 +356,59 @@ export interface components {
 			user: components["schemas"]["User"];
 			resourceAlreadyRead: boolean;
 		};
+		Comment: {
+			id: number;
+			projectId: number;
+			issueId: number;
+			content: string;
+			changeLog: {
+				field: string;
+				newValue: string;
+				originalValue: string;
+				attachmentInfo: components["schemas"]["AttachmentInfo"];
+				attributeInfo: components["schemas"]["AttachmentInfo"] & {
+					id: number;
+					typeId: number;
+				};
+				notificationInfo: components["schemas"]["NotificationInfo"];
+			}[];
+			createdUser: components["schemas"]["User"];
+			created: string;
+			updated: string;
+			stars: components["schemas"]["Star"][];
+			notifications: components["schemas"]["CommentNotification"][];
+		};
+		PullRequestStatus: {
+			id: number;
+			name: string;
+		};
+		PullRequest: {
+			id: number;
+			projectId: number;
+			repositoryId: number;
+			number: number;
+			summary: string;
+			description: string;
+			base: string;
+			branch: string;
+			status: components["schemas"]["PullRequestStatus"];
+			assignee?: components["schemas"]["User"];
+			issue: components["schemas"]["Issue"];
+			baseCommit?: string;
+			branchCommit?: string;
+			mergeCommit?: string;
+			closeAt?: string;
+			mergeAt?: string;
+			createdUser: components["schemas"]["User"];
+			created: string;
+			updatedUser: components["schemas"]["User"];
+			updated: string;
+			attachments: (components["schemas"]["FileInfo"] & {
+				createdUser: components["schemas"]["User"];
+				created: string;
+			})[];
+			stars: components["schemas"]["Star"][];
+		};
 		Notification: {
 			id: number;
 			alreadyRead: boolean;
@@ -308,30 +416,22 @@ export interface components {
 			resourceAlreadyRead: boolean;
 			project: components["schemas"]["Project"];
 			issue?: components["schemas"]["Issue"];
-			comment?: {
+			comment?: components["schemas"]["Comment"];
+			pullRequest?: components["schemas"]["PullRequest"];
+			pullRequestComment?: {
 				id: number;
-				projectId: number;
-				issueId: number;
 				content: string;
 				changeLog: {
 					field: string;
 					newValue: string;
 					originalValue: string;
-					attachmentInfo: components["schemas"]["AttachmentInfo"];
-					attributeInfo: components["schemas"]["AttachmentInfo"] & {
-						id: number;
-						typeId: number;
-					};
-					notificationInfo: components["schemas"]["NotificationInfo"];
-				};
+				}[];
 				createdUser: components["schemas"]["User"];
 				created: string;
 				updated: string;
 				stars: components["schemas"]["Star"][];
 				notifications: components["schemas"]["CommentNotification"][];
 			};
-			pullRequest?: unknown;
-			pullRequestComment?: unknown;
 			sender: components["schemas"]["User"];
 			created: string;
 		};

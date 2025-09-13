@@ -8,10 +8,15 @@ export const currentSpaceProfileOptions = queryOptions({
 		const { spaceProfiles } = await spaceProfilesStorage.getValue();
 		const currentSpaceProfile = await currentSpaceProfileStorage.getValue();
 
-		return (
+		const spaceProfile =
 			spaceProfiles.find(({ id }) => id === currentSpaceProfile?.id) ||
-			spaceProfiles[0]
-		);
+			spaceProfiles[0];
+
+		if (!spaceProfile) {
+			throw new Error("No space profile found");
+		}
+
+		return spaceProfile;
 	},
 });
 

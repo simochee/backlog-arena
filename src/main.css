@@ -69,12 +69,4 @@
     --color-red-800: #9f2115;
     --color-red-900: #832219;
     --color-red-950: #480d07;
-
-    --font-sans: IBM Plex Sans JP, sans-serif;
-}
-
-@layer base {
-    * {
-        @apply font-sans;
-    }
 }

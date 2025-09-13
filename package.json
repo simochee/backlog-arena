@@ -12,7 +12,6 @@
 	},
 	"dependencies": {
 		"@asteasolutions/zod-to-openapi": "^8.1.0",
-		"@fontsource/ibm-plex-sans-jp": "^5.2.6",
 		"@tabler/icons-react": "^3.34.1",
 		"@tanstack/history": "^1.131.2",
 		"@tanstack/react-form": "^1.19.5",

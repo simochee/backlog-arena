@@ -55,17 +55,24 @@ export const authorize = async (domain: string) => {
 	const fetchClient = createFetchClient<paths>({
 		baseUrl: `https://${domain}/api/v2`,
 	});
-	const { data: space } = await fetchClient.GET("/space", {
-		headers: {
-			Authorization: `Bearer ${accessToken.access_token}`,
-		},
-	});
+	const [{ data: space }, { data: user }] = await Promise.all([
+		fetchClient.GET("/space", {
+			headers: {
+				Authorization: `Bearer ${accessToken.access_token}`,
+			},
+		}),
+		fetchClient.GET("/users/myself", {
+			headers: {
+				Authorization: `Bearer ${accessToken.access_token}`,
+			},
+		}),
+	]);
 
 	if (!space) {
 		throw new Error(`Invalid space: ${accessToken.access_token}`);
 	}
 
-	return { space, accessToken };
+	return { space, user, accessToken };
 };
 
 export const refreshAccessToken = async (

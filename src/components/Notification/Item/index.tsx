@@ -6,6 +6,7 @@ import {
 	IconGitPullRequestDraft,
 	IconMessage,
 	IconStar,
+	IconStarFilled,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import { clsx } from "clsx";
@@ -119,6 +120,8 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		? `${project.projectKey}/${repository?.name}#${pullRequest.number} ${pullRequest.summary}`
 		: `${issue?.issueKey} ${issue?.summary}`;
 
+	console.log(notification, currentSpaceProfile.user);
+
 	return (
 		<GridListItem
 			id={notification.id}
@@ -162,7 +165,14 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 								</UiTooltip>
 								<UiTooltip text="スターをつける">
 									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
-										<IconStar className="size-4" />
+										{notification.comment?.stars.some(
+											({ presenter }) =>
+												presenter.id === currentSpaceProfile.user.id,
+										) ? (
+											<IconStarFilled className="size-4" />
+										) : (
+											<IconStar className="size-4" />
+										)}
 									</Button>
 								</UiTooltip>
 								<UiTooltip text="既読にする">

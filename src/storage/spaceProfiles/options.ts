@@ -16,9 +16,10 @@ export const addSpaceProfileOptions = mutationOptions({
 	mutationFn: async (variables: {
 		domain: string;
 		space: components["schemas"]["Space"];
+		user: components["schemas"]["User"];
 		accessToken: Entity.OAuth2.AccessToken;
 	}) => {
-		const { domain, space, accessToken } = variables;
+		const { domain, space, user, accessToken } = variables;
 		const storageValue = await spaceProfilesStorage.getValue();
 
 		const spaceProfile: SpaceProfile = {
@@ -27,6 +28,9 @@ export const addSpaceProfileOptions = mutationOptions({
 				spaceKey: space.spaceKey,
 				name: space.name,
 				domain,
+			},
+			user: {
+				id: user.id,
 			},
 			credentials: {
 				authType: "Bearer",

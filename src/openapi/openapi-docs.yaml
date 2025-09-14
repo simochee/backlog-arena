@@ -89,6 +89,47 @@ components:
         - textFormattingRule
         - created
         - updated
+    GitRepository:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        hookUrl:
+          type: string
+        httpUrl:
+          type: string
+        sshUrl:
+          type: string
+        displayOrder:
+          type: number
+        pushedAt:
+          type: string
+        createdUser:
+          $ref: "#/components/schemas/User"
+        created:
+          type: string
+        updatedUser:
+          $ref: "#/components/schemas/User"
+        updated:
+          type: string
+      required:
+        - id
+        - projectId
+        - name
+        - description
+        - httpUrl
+        - sshUrl
+        - displayOrder
+        - createdUser
+        - created
+        - updatedUser
+        - updated
     NotificationReason:
       type: integer
       enum:
@@ -779,46 +820,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: number
-                    projectId:
-                      type: number
-                    name:
-                      type: string
-                    description:
-                      type: string
-                    hookUrl:
-                      type: string
-                    httpUrl:
-                      type: string
-                    sshUrl:
-                      type: string
-                    displayOrder:
-                      type: number
-                    pushedAt:
-                      type: string
-                    createdUser:
-                      $ref: "#/components/schemas/User"
-                    created:
-                      type: string
-                    updatedUser:
-                      $ref: "#/components/schemas/User"
-                    updated:
-                      type: string
-                  required:
-                    - id
-                    - projectId
-                    - name
-                    - description
-                    - httpUrl
-                    - sshUrl
-                    - displayOrder
-                    - createdUser
-                    - created
-                    - updatedUser
-                    - updated
+                  $ref: "#/components/schemas/GitRepository"
   /notifications:
     get:
       description: お知らせ一覧の取得

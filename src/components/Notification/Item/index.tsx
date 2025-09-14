@@ -1,5 +1,4 @@
 import {
-	IconCopy,
 	IconEye,
 	IconEyeCheck,
 	IconGitMerge,
@@ -14,6 +13,7 @@ import type { Notification, NotificationReason } from "@/client";
 import { getProjectsByProjectIdOrKeyGitRepositoriesOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { BacklogImage } from "@/components/Backlog/Image";
 import { NotificationAction } from "@/components/Notification/Action";
+import { NotificationCopyAction } from "@/components/Notification/CopyAction";
 import { NotificationStarAction } from "@/components/Notification/StarAction";
 import { UiDescription } from "@/components/Ui/Description";
 import { UiTooltip } from "@/components/Ui/Tooltip";
@@ -119,9 +119,9 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 						</p>
 						{isHovered ? (
 							<div className="flex items-center gap-1">
-								<NotificationAction
-									tooltip="課題キーと件名をコピーする"
-									icon={IconCopy}
+								<NotificationCopyAction
+									notification={notification}
+									repositories={repositories}
 								/>
 								<NotificationAction
 									tooltip="コメントを返信する"
@@ -134,7 +134,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 								<NotificationAction
 									tooltip="既読にする"
 									icon={resourceAlreadyRead ? IconEyeCheck : IconEye}
-									// isDisabled={resourceAlreadyRead}
+									isDisabled={resourceAlreadyRead}
 									onClick={() => markAsRead({ path: { id: notification.id } })}
 								/>
 							</div>

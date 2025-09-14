@@ -340,7 +340,6 @@ components:
           type: string
       required:
         - id
-        - comment
         - url
         - title
         - presenter
@@ -810,3 +809,16 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Notification"
+  /notifications/{id}/markAsRead:
+    post:
+      description: お知らせの既読化
+      summary: お知らせを既読にします。
+      parameters:
+        - schema:
+            type: number
+          required: true
+          name: id
+          in: path
+      responses:
+        "204":
+          description: No Content

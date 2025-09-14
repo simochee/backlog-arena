@@ -171,6 +171,45 @@ export interface paths {
 		patch?: never;
 		trace?: never;
 	};
+	"/notifications/{id}/markAsRead": {
+		parameters: {
+			query?: never;
+			header?: never;
+			path?: never;
+			cookie?: never;
+		};
+		get?: never;
+		put?: never;
+		/**
+		 * お知らせを既読にします。
+		 * @description お知らせの既読化
+		 */
+		post: {
+			parameters: {
+				query?: never;
+				header?: never;
+				path: {
+					id: number;
+				};
+				cookie?: never;
+			};
+			requestBody?: never;
+			responses: {
+				/** @description No Content */
+				204: {
+					headers: {
+						[name: string]: unknown;
+					};
+					content?: never;
+				};
+			};
+		};
+		delete?: never;
+		options?: never;
+		head?: never;
+		patch?: never;
+		trace?: never;
+	};
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -304,7 +343,7 @@ export interface components {
 		};
 		Star: {
 			id: number;
-			comment: string;
+			comment?: string;
 			url: string;
 			title: string;
 			presenter: components["schemas"]["User"];

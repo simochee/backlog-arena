@@ -1,6 +1,7 @@
 import {
 	IconCopy,
-	IconEyeX,
+	IconEye,
+	IconEyeCheck,
 	IconGitMerge,
 	IconGitPullRequestClosed,
 	IconGitPullRequestDraft,
@@ -9,13 +10,15 @@ import {
 	IconStarFilled,
 } from "@tabler/icons-react";
 import { clsx } from "clsx";
-import { Button, GridListItem } from "react-aria-components";
+import { GridListItem } from "react-aria-components";
 import { BacklogImage } from "@/components/Backlog/Image";
+import { NotificationAction } from "@/components/Notification/Action";
 import { UiDescription } from "@/components/Ui/Description";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 import { useApi } from "@/hooks/useApi.ts";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
 import { useCurrentSpaceUrl } from "@/hooks/useCurrentSpaceUrl.ts";
+import { useNotificationRead } from "@/hooks/useNotificationRead.ts";
 import type { components } from "@/openapi/openapi-schema.ts";
 
 type Props = {
@@ -61,6 +64,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		project,
 		comment,
 		sender,
+		resourceAlreadyRead,
 	} = notification;
 
 	const { $api } = useApi();
@@ -80,6 +84,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	);
 
 	const toUrl = useCurrentSpaceUrl();
+	const { mutate: markAsRead } = useNotificationRead();
 
 	const reasonText = getStatusText(reason);
 	const hasStarred = notification.comment?.stars.some(
@@ -100,7 +105,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 			target="_blank"
 			className={clsx(
 				"grid gap-1 p-2 border-t border-t-gray-300 focus-visible:bg-cream-50 hover:bg-cream-50",
-				notification.resourceAlreadyRead ? "bg-gray-100" : "",
+				resourceAlreadyRead ? "bg-gray-100" : "",
 			)}
 		>
 			{({ isHovered }) => (
@@ -124,37 +129,29 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 						</p>
 						{isHovered ? (
 							<div className="flex items-center gap-1">
-								<UiTooltip text="課題キーと件名をコピーする">
-									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
-										<IconCopy className="size-4" />
-									</Button>
-								</UiTooltip>
-								<UiTooltip text="コメントを返信する">
-									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
-										<IconMessage className="size-4" />
-									</Button>
-								</UiTooltip>
-								<UiTooltip text="スターをつける">
-									<Button
-										className={clsx(
-											"size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:text-white",
-											hasStarred
-												? "text-cream-400 hover:border-cream-400 hover:bg-cream-400"
-												: "hover:border-green-700 hover:bg-green-700",
-										)}
-									>
-										{hasStarred ? (
-											<IconStarFilled className="size-4" />
-										) : (
-											<IconStar className="size-4" />
-										)}
-									</Button>
-								</UiTooltip>
-								<UiTooltip text="既読にする">
-									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
-										<IconEyeX className="size-4" />
-									</Button>
-								</UiTooltip>
+								<NotificationAction
+									tooltip="課題キーと件名をコピーする"
+									icon={IconCopy}
+								/>
+								<NotificationAction
+									tooltip="コメントを返信する"
+									icon={IconMessage}
+								/>
+								<NotificationAction
+									tooltip="スターをつける"
+									icon={hasStarred ? IconStarFilled : IconStar}
+									isStarred={hasStarred}
+								/>
+								<NotificationAction
+									tooltip="既読にする"
+									icon={resourceAlreadyRead ? IconEyeCheck : IconEye}
+									// isDisabled={resourceAlreadyRead}
+									onClick={() =>
+										markAsRead({
+											params: { path: { id: notification.id } },
+										})
+									}
+								/>
 							</div>
 						) : (
 							<div>

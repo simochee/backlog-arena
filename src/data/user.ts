@@ -1,7 +1,7 @@
+import type { User } from "@/client";
 import { any } from "@/data/utils.ts";
-import type { components } from "@/openapi/openapi-schema.ts";
 
-export const NORMAL_USER: components["schemas"]["User"] = {
+export const NORMAL_USER: User = {
 	id: any.int,
 	userId: any.string,
 	name: "桜井翔",

@@ -1,8 +1,8 @@
+import type { Issue } from "@/client";
 import { NORMAL_USER } from "@/data/user.ts";
 import { any } from "@/data/utils.ts";
-import type { components } from "@/openapi/openapi-schema.ts";
 
-export const NORMAL_ISSUE: components["schemas"]["Issue"] = {
+export const NORMAL_ISSUE: Issue = {
 	id: any.int,
 	projectId: any.int,
 	issueKey: "EXAMPLE-1",

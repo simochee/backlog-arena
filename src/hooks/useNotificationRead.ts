@@ -1,31 +1,36 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { useApi } from "@/hooks/useApi.ts";
-import type { components } from "@/openapi/openapi-schema.ts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+	getNotificationsOptions,
+	postNotificationsByIdMarkAsReadMutation,
+} from "@/client/@tanstack/react-query.gen.ts";
 
 export const useNotificationRead = () => {
 	const queryClient = useQueryClient();
-	const { $api } = useApi();
 
-	return $api.useMutation("post", "/notifications/{id}/markAsRead", {
-		onMutate: ({
-			params: {
-				path: { id },
-			},
-		}) => {
-			console.log("run!!!!", queryClient);
-			queryClient.setQueryData<components["schemas"]["Notification"][]>(
-				$api.queryOptions("get", "/notifications", {}).queryKey,
-				(data = []) => {
-					for (const item of data) {
-						if (item.id === id) {
-							item.alreadyRead = true;
-							item.resourceAlreadyRead = true;
-						}
+	const { queryKey } = getNotificationsOptions();
+
+	return useMutation({
+		...postNotificationsByIdMarkAsReadMutation(),
+		onMutate: ({ path: { id } }) => {
+			const previousData = queryClient.getQueryData(queryKey);
+
+			queryClient.setQueryData(queryKey, (data = []) => {
+				for (const item of data) {
+					if (item.id === id) {
+						item.alreadyRead = true;
+						item.resourceAlreadyRead = true;
 					}
+				}
 
-					return data;
-				},
-			);
+				return data;
+			});
+
+			return { previousData };
+		},
+		onError: (_error, _variables, context) => {
+			if (context) {
+				queryClient.setQueryData(queryKey, context.previousData);
+			}
 		},
 	});
 };

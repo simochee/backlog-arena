@@ -1,6 +1,6 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { Entity } from "backlog-js";
-import type { components } from "@/openapi/openapi-schema";
+import type { Space, User } from "@/client";
 import type { SpaceProfile } from "@/storage/spaceProfiles/types.ts";
 import { spaceProfilesStorage } from "./storage";
 
@@ -15,8 +15,8 @@ export const spaceProfilesOptions = queryOptions({
 export const addSpaceProfileOptions = mutationOptions({
 	mutationFn: async (variables: {
 		domain: string;
-		space: components["schemas"]["Space"];
-		user: components["schemas"]["User"];
+		space: Space;
+		user: User;
 		accessToken: Entity.OAuth2.AccessToken;
 	}) => {
 		const { domain, space, user, accessToken } = variables;

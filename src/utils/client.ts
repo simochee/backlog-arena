@@ -74,6 +74,7 @@ export const registerClientInterceptors = (client: Client) => {
 		const url = new URL(request.url);
 		url.protocol = "https:";
 		url.host = space.domain;
+		url.port = "";
 
 		const newRequest = new Request(url, request);
 		newRequest.headers.set(

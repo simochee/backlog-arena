@@ -1,7 +1,7 @@
+import type { Project } from "@/client";
 import { any } from "@/data/utils.ts";
-import type { components } from "@/openapi/openapi-schema.ts";
 
-export const NORMAL_PROJECT: components["schemas"]["Project"] = {
+export const NORMAL_PROJECT: Project = {
 	id: any.int,
 	projectKey: "example",
 	name: "Example Inc.",

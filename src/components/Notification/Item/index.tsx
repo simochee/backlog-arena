@@ -9,23 +9,24 @@ import {
 	IconStar,
 	IconStarFilled,
 } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import { GridListItem } from "react-aria-components";
+import type { Notification, NotificationReason } from "@/client";
+import { getProjectsByProjectIdOrKeyGitRepositoriesOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { BacklogImage } from "@/components/Backlog/Image";
 import { NotificationAction } from "@/components/Notification/Action";
 import { UiDescription } from "@/components/Ui/Description";
 import { UiTooltip } from "@/components/Ui/Tooltip";
-import { useApi } from "@/hooks/useApi.ts";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
 import { useCurrentSpaceUrl } from "@/hooks/useCurrentSpaceUrl.ts";
 import { useNotificationRead } from "@/hooks/useNotificationRead.ts";
-import type { components } from "@/openapi/openapi-schema.ts";
 
 type Props = {
-	notification: components["schemas"]["Notification"];
+	notification: Notification;
 };
 
-const getStatusText = (reason: components["schemas"]["NotificationReason"]) => {
+const getStatusText = (reason: NotificationReason) => {
 	switch (reason) {
 		case 1:
 			return ["課題の", "担当者", "に設定しました。"];
@@ -67,21 +68,14 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		resourceAlreadyRead,
 	} = notification;
 
-	const { $api } = useApi();
-	const { data: repositories = [] } = $api.useQuery(
-		"get",
-		"/projects/{projectIdOrKey}/git/repositories",
-		{
-			params: {
-				path: {
-					projectIdOrKey: project.projectKey,
-				},
+	const { data: repositories = [] } = useQuery({
+		...getProjectsByProjectIdOrKeyGitRepositoriesOptions({
+			path: {
+				projectIdOrKey: project.projectKey,
 			},
-		},
-		{
-			enabled: pullRequest != null,
-		},
-	);
+		}),
+		enabled: pullRequest != null,
+	});
 
 	const toUrl = useCurrentSpaceUrl();
 	const { mutate: markAsRead } = useNotificationRead();

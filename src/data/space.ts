@@ -1,7 +1,7 @@
+import type { Space } from "@/client";
 import { any } from "@/data/utils.ts";
-import type { components } from "@/openapi/openapi-schema.ts";
 
-export const NORMAL_SPACE: components["schemas"]["Space"] = {
+export const NORMAL_SPACE: Space = {
 	spaceKey: "EXAMPLE",
 	name: "Example Inc.",
 	ownerId: any.int,

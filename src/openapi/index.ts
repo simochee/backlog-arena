@@ -5,7 +5,6 @@ import {
 	OpenAPIRegistry,
 	OpenApiGeneratorV3,
 } from "@asteasolutions/zod-to-openapi";
-import openapiTS, { astToString } from "openapi-typescript";
 import yaml from "yaml";
 import * as z from "zod";
 
@@ -39,13 +38,5 @@ const openapiDocs = yaml.stringify(document);
 await writeFile(
 	new URL("openapi-docs.yaml", import.meta.url),
 	openapiDocs,
-	"utf-8",
-);
-
-const openapiAst = await openapiTS(openapiDocs);
-const openapiSchema = astToString(openapiAst);
-await writeFile(
-	new URL("openapi-schema.ts", import.meta.url),
-	openapiSchema,
 	"utf-8",
 );

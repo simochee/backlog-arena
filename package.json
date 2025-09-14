@@ -8,6 +8,7 @@
 		"build-storybook": "storybook build",
 		"dev": "wxt",
 		"postinstall": "lefthook install && wxt prepare",
+		"openapi-ts": "tsx src/openapi && openapi-ts",
 		"storybook": "storybook dev -p 6006"
 	},
 	"dependencies": {
@@ -35,6 +36,7 @@
 		"@chromatic-com/storybook": "^4.1.1",
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
+		"@hey-api/openapi-ts": "^0.83.1",
 		"@storybook/addon-a11y": "^9.1.5",
 		"@storybook/addon-docs": "^9.1.5",
 		"@storybook/addon-vitest": "^9.1.5",
@@ -59,6 +61,7 @@
 		"storybook": "^9.1.5",
 		"tailwindcss": "^4.1.13",
 		"tailwindcss-animate": "^1.0.7",
+		"tsx": "^4.20.5",
 		"vite": "^7.1.4",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.2.4",

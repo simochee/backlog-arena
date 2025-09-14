@@ -1,22 +1,18 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { GridList } from "react-aria-components";
+import { getNotificationsOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { NotificationItem } from "@/components/Notification/Item";
-import { useApi } from "@/hooks/useApi.ts";
 
 export const Route = createFileRoute("/sidepanel/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { $api } = useApi();
-	const { data = [] } = $api.useQuery(
-		"get",
-		"/notifications",
-		{},
-		{
-			refetchInterval: 60 * 1000,
-		},
-	);
+	const { data = [] } = useQuery({
+		...getNotificationsOptions(),
+		refetchInterval: 60 * 1000,
+	});
 
 	return (
 		<div>

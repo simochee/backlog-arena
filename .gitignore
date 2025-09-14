@@ -1,6 +1,7 @@
 node_modules/
 .wxt/
 .output/
+src/client/
 .DS_Store
 .env.submit*
 *.log

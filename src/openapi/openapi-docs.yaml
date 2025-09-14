@@ -727,6 +727,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+  /stars:
+    post:
+      description: スターの追加
+      summary: 課題、コメント、Wikiにスターを1つ追加します。
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                issueId:
+                  type: number
+                commentId:
+                  type: number
+                wikiId:
+                  type: number
+                pullRequestId:
+                  type: number
+                pullRequestCommentId:
+                  type: number
+      responses:
+        "204":
+          description: No Content
   /space:
     get:
       description: スペース情報の取得

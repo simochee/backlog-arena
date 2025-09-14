@@ -6,8 +6,6 @@ import {
 	IconGitPullRequestClosed,
 	IconGitPullRequestDraft,
 	IconMessage,
-	IconStar,
-	IconStarFilled,
 } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
@@ -16,6 +14,7 @@ import type { Notification, NotificationReason } from "@/client";
 import { getProjectsByProjectIdOrKeyGitRepositoriesOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { BacklogImage } from "@/components/Backlog/Image";
 import { NotificationAction } from "@/components/Notification/Action";
+import { NotificationStarAction } from "@/components/Notification/StarAction";
 import { UiDescription } from "@/components/Ui/Description";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 import { useCurrentSpaceProfile } from "@/hooks/useCurrentSpaceProfile.ts";
@@ -81,9 +80,6 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const { mutate: markAsRead } = useNotificationRead();
 
 	const reasonText = getStatusText(reason);
-	const hasStarred = notification.comment?.stars.some(
-		({ presenter }) => presenter.id === currentSpaceProfile.user.id,
-	);
 	const isPullRequest = [6, 10, 11, 12, 13].includes(reason);
 	const repository = repositories.find(
 		({ projectId }) => projectId === notification.project.id,
@@ -131,20 +127,15 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 									tooltip="コメントを返信する"
 									icon={IconMessage}
 								/>
-								<NotificationAction
-									tooltip="スターをつける"
-									icon={hasStarred ? IconStarFilled : IconStar}
-									isStarred={hasStarred}
+								<NotificationStarAction
+									userId={currentSpaceProfile.user.id}
+									notification={notification}
 								/>
 								<NotificationAction
 									tooltip="既読にする"
 									icon={resourceAlreadyRead ? IconEyeCheck : IconEye}
 									// isDisabled={resourceAlreadyRead}
-									onClick={() =>
-										markAsRead({
-											params: { path: { id: notification.id } },
-										})
-									}
+									onClick={() => markAsRead({ path: { id: notification.id } })}
 								/>
 							</div>
 						) : (

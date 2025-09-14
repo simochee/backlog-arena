@@ -10,6 +10,7 @@ import {
 } from "@tabler/icons-react";
 import { clsx } from "clsx";
 import { Button, GridListItem } from "react-aria-components";
+import { BacklogImage } from "@/components/Backlog/Image";
 import { UiDescription } from "@/components/Ui/Description";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 import { useApi } from "@/hooks/useApi.ts";
@@ -81,6 +82,9 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const toUrl = useCurrentSpaceUrl();
 
 	const reasonText = getStatusText(reason);
+	const hasStarred = notification.comment?.stars.some(
+		({ presenter }) => presenter.id === currentSpaceProfile.user.id,
+	);
 	const isPullRequest = [6, 10, 11, 12, 13].includes(reason);
 	const repository = repositories.find(
 		({ projectId }) => projectId === notification.project.id,
@@ -89,15 +93,13 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		? `${project.projectKey}/${repository?.name}#${pullRequest.number} ${pullRequest.summary}`
 		: `${issue?.issueKey} ${issue?.summary}`;
 
-	console.log(notification, currentSpaceProfile.user);
-
 	return (
 		<GridListItem
 			id={notification.id}
 			href={toUrl(`/globalbar/notifications/redirect/${notification.id}`)}
 			target="_blank"
 			className={clsx(
-				"grid gap-1 p-2 border-t border-t-gray-300 focus-visible:bg-accent hover:bg-accent",
+				"grid gap-1 p-2 border-t border-t-gray-300 focus-visible:bg-cream-50 hover:bg-cream-50",
 				notification.resourceAlreadyRead ? "bg-gray-100" : "",
 			)}
 		>
@@ -105,10 +107,10 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 				<>
 					<div className="grid h-6 grid-cols-[auto_1fr_auto] items-center gap-1">
 						<UiTooltip text={sender.name} nonInteractive>
-							<img
-								className="size-5 rounded"
-								src="https://placehold.jp/320x320.png"
-								alt=""
+							<BacklogImage
+								type="user"
+								variable={sender.id}
+								className="size-4 rounded"
 							/>
 						</UiTooltip>
 						<p className="line-clamp-1 text-gray-600 text-xs">
@@ -133,11 +135,15 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 									</Button>
 								</UiTooltip>
 								<UiTooltip text="スターをつける">
-									<Button className="size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:border-green-700 hover:bg-green-700 hover:text-white">
-										{notification.comment?.stars.some(
-											({ presenter }) =>
-												presenter.id === currentSpaceProfile.user.id,
-										) ? (
+									<Button
+										className={clsx(
+											"size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:text-white",
+											hasStarred
+												? "text-cream-400 hover:border-cream-400 hover:bg-cream-400"
+												: "hover:border-green-700 hover:bg-green-700",
+										)}
+									>
+										{hasStarred ? (
 											<IconStarFilled className="size-4" />
 										) : (
 											<IconStar className="size-4" />
@@ -160,7 +166,14 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 						{
 							// プロジェクト追加
 							reason === 6 ? (
-								`${project.name} (${project.projectKey})`
+								<span className="grid grid-cols-[1fr_auto] items-center gap-1">
+									{project.name} ({project.projectKey})
+									<BacklogImage
+										type="project"
+										variable={project.id}
+										className="size-5 rounded"
+									/>
+								</span>
 							) : // コメント
 							[2, 11].includes(reason) ? (
 								<UiDescription>
@@ -177,15 +190,8 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 						}
 					</p>
 					{reason !== 6 && (
-						<div className="grid grid-cols-[1fr_auto] items-center gap-1">
+						<div className="grid grid-cols-[1fr_auto_auto] items-center gap-1">
 							<p className="grid grid-cols-[auto_1fr] gap-1 items-center">
-								<UiTooltip text={subject} nonInteractive>
-									<img
-										className="size-4 rounded"
-										src="https://placehold.jp/320x320.png"
-										alt=""
-									/>
-								</UiTooltip>
 								<span className="line-clamp-1 text-gray-600 text-xs">
 									{[2, 3, 4, 11, 12, 13].includes(reason)
 										? subject
@@ -193,6 +199,13 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 											`${project.projectKey}/${repository?.name}#${pullRequest?.number}`}
 								</span>
 							</p>
+							<UiTooltip text={subject} nonInteractive>
+								<BacklogImage
+									type="project"
+									variable={project.id}
+									className="size-4 rounded"
+								/>
+							</UiTooltip>
 							{issue ? (
 								<p
 									className="line-clamp-1 rounded px-1 text-xs leading-tight text-white"

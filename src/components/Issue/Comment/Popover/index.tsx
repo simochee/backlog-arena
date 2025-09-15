@@ -6,18 +6,22 @@ import {
 	Popover,
 	type PopoverProps,
 } from "react-aria-components";
-import type { Issue, PatchIssuesByIssueIdOrKeyData } from "@/client";
+import type { Comment, Issue, PatchIssuesByIssueIdOrKeyData } from "@/client";
 import { patchIssuesByIssueIdOrKeyMutation } from "@/client/@tanstack/react-query.gen.ts";
+import { BacklogImage } from "@/components/Backlog/Image";
 import { IssueCommentForm } from "@/components/Issue/Comment/Form";
+import { UiDescription } from "@/components/Ui/Description";
 import { UiOverlayArrow } from "@/components/Ui/OverlayArrow";
 
 type Props = PopoverProps & {
 	issue: Issue;
+	comment: Comment | undefined;
 	children: React.ReactNode;
 };
 
 export const IssueCommentPopover: React.FC<Props> = ({
 	issue,
+	comment,
 	children,
 	...props
 }) => {
@@ -56,10 +60,23 @@ export const IssueCommentPopover: React.FC<Props> = ({
 				className="px-2 w-full max-w-xl drop-shadow"
 			>
 				<UiOverlayArrow className="text-white" size={12} />
-				<Dialog className="bg-white rounded p-1">
-					<div className="max-h-24 overflow-y-auto">
-						<p className="whitespace-pre-line">{issue.description}</p>
+				<Dialog className="bg-white rounded p-1 grid gap-1">
+					<div className="grid grid-cols-[auto_1fr] gap-1 border-b border-gray-200">
+						<BacklogImage
+							className="size-6 rounded"
+							type="project"
+							variable={issue.projectId}
+						/>
+						<div className="leading-none flex flex-col gap-1">
+							<p className="text-[10px]">{issue.issueKey}</p>
+							<p className="line-clamp-1">{issue.summary}</p>
+						</div>
 					</div>
+					<p className="max-h-48 overflow-y-auto grid gap-1">
+						<UiDescription breaks>
+							{comment?.content || issue.description}
+						</UiDescription>
+					</p>
 					<IssueCommentForm
 						issue={issue}
 						isSubmitting={isPending}

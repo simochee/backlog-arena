@@ -130,6 +130,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 								{issue && (
 									<IssueCommentPopover
 										issue={issue}
+										comment={comment}
 										isOpen={isCommentOpen}
 										onOpenChange={setIsCommentOpen}
 									>

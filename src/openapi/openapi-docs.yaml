@@ -883,3 +883,74 @@ paths:
       responses:
         "204":
           description: No Content
+  /issues/{issueIdOrKey}:
+    patch:
+      description: 課題情報の更新
+      summary: 参加しているプロジェクトの課題を更新します。
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+              - type: number
+          required: true
+          in: path
+          name: issueIdOrKey
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                summary:
+                  type: string
+                parentIssueId:
+                  type: number
+                description:
+                  type: string
+                statusId:
+                  type: number
+                resolutionId:
+                  type: number
+                startDate:
+                  type: string
+                dueDate:
+                  type: string
+                estimatedHours:
+                  type: number
+                actualHours:
+                  type: number
+                issueTypeId:
+                  type: number
+                categoryId[]:
+                  type: array
+                  items:
+                    type: number
+                versionId[]:
+                  type: array
+                  items:
+                    type: number
+                milestoneId[]:
+                  type: array
+                  items:
+                    type: number
+                priorityId:
+                  type: number
+                assigneeId:
+                  type: number
+                notificationUserId[]:
+                  type: array
+                  items:
+                    type: number
+                attachmentId[]:
+                  type: array
+                  items:
+                    type: number
+                comment:
+                  type: string
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Issue"

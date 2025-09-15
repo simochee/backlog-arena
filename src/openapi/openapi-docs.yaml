@@ -89,6 +89,36 @@ components:
         - textFormattingRule
         - created
         - updated
+    ProjectStatus:
+      type: object
+      properties:
+        id:
+          type: number
+        projectId:
+          type: number
+        name:
+          type: string
+        color:
+          type: string
+          enum:
+            - "#ea2c00"
+            - "#e87758"
+            - "#e07b9a"
+            - "#868cb7"
+            - "#3b9dbd"
+            - "#4caf93"
+            - "#b0be3c"
+            - "#eda62a"
+            - "#f42858"
+            - "#393939"
+        displayOrder:
+          type: number
+      required:
+        - id
+        - projectId
+        - name
+        - color
+        - displayOrder
     GitRepository:
       type: object
       properties:
@@ -255,36 +285,6 @@ components:
       required:
         - id
         - name
-    ProjectStatus:
-      type: object
-      properties:
-        id:
-          type: number
-        projectId:
-          type: number
-        name:
-          type: string
-        color:
-          type: string
-          enum:
-            - "#ea2c00"
-            - "#e87758"
-            - "#e07b9a"
-            - "#868cb7"
-            - "#3b9dbd"
-            - "#4caf93"
-            - "#b0be3c"
-            - "#eda62a"
-            - "#f42858"
-            - "#393939"
-        displayOrder:
-          type: number
-      required:
-        - id
-        - projectId
-        - name
-        - color
-        - displayOrder
     Category:
       type: object
       properties:
@@ -757,6 +757,19 @@ components:
         - created
   parameters: {}
 paths:
+  /users:
+    get:
+      description: ユーザー一覧の取得
+      summary: スペースのユーザーの一覧を取得します。
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
   /users/myself:
     get:
       description: 認証ユーザー情報の取得
@@ -802,13 +815,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Space"
+  /projects/{projectIdOrKey}/statuses:
+    get:
+      description: プロジェクトの状態一覧の取得
+      summary: プロジェクト固有の課題に設定できる状態一覧を取得します。
+      parameters:
+        - schema:
+            anyOf:
+              - type: number
+              - type: string
+          required: true
+          name: projectIdOrKey
+          in: path
+      responses:
+        "200":
+          description: レスポンスボディ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectStatus"
   /projects/{projectIdOrKey}/git/repositories:
     get:
       description: Gitリポジトリ一覧の取得
       summary: Gitリポジトリの一覧を取得します。
       parameters:
         - schema:
-            type: string
+            anyOf:
+              - type: number
+              - type: string
           required: true
           name: projectIdOrKey
           in: path

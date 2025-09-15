@@ -8,10 +8,12 @@ import {
 } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
+import { useState } from "react";
 import { GridListItem } from "react-aria-components";
 import type { Notification, NotificationReason } from "@/client";
 import { getProjectsByProjectIdOrKeyGitRepositoriesOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { BacklogImage } from "@/components/Backlog/Image";
+import { IssueCommentPopover } from "@/components/Issue/Comment/Popover";
 import { NotificationAction } from "@/components/Notification/Action";
 import { NotificationCopyAction } from "@/components/Notification/CopyAction";
 import { NotificationStarAction } from "@/components/Notification/StarAction";
@@ -79,6 +81,8 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const toUrl = useCurrentSpaceUrl();
 	const { mutate: markAsRead } = useNotificationRead();
 
+	const [isCommentOpen, setIsCommentOpen] = useState(false);
+
 	const reasonText = getStatusText(reason);
 	const isPullRequest = [6, 10, 11, 12, 13].includes(reason);
 	const repository = repositories.find(
@@ -117,16 +121,26 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 							</span>{" "}
 							{reasonText[2]}
 						</p>
-						{isHovered ? (
+						{isHovered || isCommentOpen ? (
 							<div className="flex items-center gap-1">
 								<NotificationCopyAction
 									notification={notification}
 									repositories={repositories}
 								/>
-								<NotificationAction
-									tooltip="コメントを返信する"
-									icon={IconMessage}
-								/>
+								{issue && (
+									<IssueCommentPopover
+										issue={issue}
+										isOpen={isCommentOpen}
+										onOpenChange={setIsCommentOpen}
+									>
+										<NotificationAction
+											tooltip="コメントを返信する"
+											icon={IconMessage}
+											isActive={isCommentOpen}
+											onClick={() => setIsCommentOpen(true)}
+										/>
+									</IssueCommentPopover>
+								)}
 								<NotificationStarAction
 									userId={currentSpaceProfile.user.id}
 									notification={notification}
@@ -190,7 +204,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 							</UiTooltip>
 							{issue ? (
 								<p
-									className="line-clamp-1 rounded px-1 text-xs leading-tight text-white"
+									className="h-4 grid place-items-center line-clamp-1 rounded px-1 text-[10px] leading-tight text-white"
 									style={{
 										backgroundColor: issue?.status.color,
 									}}

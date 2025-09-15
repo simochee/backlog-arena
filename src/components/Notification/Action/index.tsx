@@ -24,7 +24,7 @@ export const NotificationAction: React.FC<Props> = ({
 					"size-6 rounded-full grid place-items-center border border-gray-300 bg-gray-50 hover:text-white",
 					"disabled:border-gray-100 disabled:text-gray-500",
 					{
-						"border-green-700 bg-green-700": isActive,
+						"border-green-700 bg-green-700 text-white": isActive,
 						"text-cream-400 hover:border-cream-400 hover:bg-cream-400":
 							isStarred,
 						"hover:border-green-700 hover:bg-green-700": !isStarred,

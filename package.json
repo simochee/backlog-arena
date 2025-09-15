@@ -27,6 +27,7 @@
 		"react-aria-components": "^1.12.1",
 		"react-dom": "^19.1.1",
 		"react-error-boundary": "^6.0.0",
+		"react-textarea-autosize": "^8.5.9",
 		"react-use": "^17.6.0",
 		"tailwindcss-react-aria-components": "^2.0.1",
 		"zod": "^4.1.8"

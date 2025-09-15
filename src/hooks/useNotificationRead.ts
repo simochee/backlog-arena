@@ -12,8 +12,6 @@ export const useNotificationRead = () => {
 	return useMutation({
 		...postNotificationsByIdMarkAsReadMutation(),
 		onMutate: ({ path: { id } }) => {
-			console.log("on mutate");
-
 			const previousData = queryClient.getQueryData(queryKey);
 
 			queryClient.setQueryData(queryKey, (data = []) => {

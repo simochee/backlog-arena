@@ -98,7 +98,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 			href={toUrl(`/globalbar/notifications/redirect/${notification.id}`)}
 			target="_blank"
 			className={clsx(
-				"grid gap-1 p-2 border-t border-t-gray-300 focus-visible:bg-cream-50 hover:bg-cream-50",
+				"grid gap-1 p-2 border-b border-gray-300 focus-visible:bg-cream-50 hover:bg-cream-50",
 				resourceAlreadyRead ? "bg-gray-100" : "",
 			)}
 		>

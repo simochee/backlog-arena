@@ -5,8 +5,6 @@ import {
 	Autocomplete,
 	Button,
 	Input,
-	ListBox,
-	ListBoxItem,
 	ListLayout,
 	Popover,
 	SearchField,
@@ -17,6 +15,7 @@ import {
 import type { User } from "@/client";
 import { getUsersOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { BacklogImage } from "@/components/Backlog/Image";
+import { UiListBox } from "@/components/Ui/ListBox";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 
 type Props = {
@@ -75,16 +74,9 @@ export const IssueCommentFormAssignee: React.FC<Props> = ({
 						/>
 					</SearchField>
 					<Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 28 }}>
-						<ListBox items={data} className="h-48 overflow-y-auto">
-							{({ id, name }) => (
-								<ListBoxItem
-									key={id}
-									className="px-2 py-1 rounded focus:bg-cream-100 pressed:bg-cream-100 outline-none line-clamp-1"
-								>
-									{name}
-								</ListBoxItem>
-							)}
-						</ListBox>
+						<UiListBox items={data} className="h-48">
+							{({ name }) => name}
+						</UiListBox>
 					</Virtualizer>
 				</Autocomplete>
 			</Popover>

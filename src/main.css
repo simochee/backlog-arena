@@ -80,6 +80,10 @@
     --color-cream-800: #805013;
     --color-cream-900: #6d4116;
     --color-cream-950: #3f2109;
+}
 
-
+@layer base {
+    html, body, #root {
+        @apply h-full;
+    }
 }

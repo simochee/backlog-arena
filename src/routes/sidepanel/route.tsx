@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { ErrorBoundary } from "react-error-boundary";
-import { browser } from "wxt/browser";
+import { SidepanelLayout } from "@/components/Sidepanel/Layout";
 
 export const Route = createFileRoute("/sidepanel")({
 	component: RouteComponent,
@@ -8,16 +8,10 @@ export const Route = createFileRoute("/sidepanel")({
 
 function RouteComponent() {
 	return (
-		<div>
-			<button
-				type="button"
-				onClick={() => browser.tabs.create({ url: "settings.html" })}
-			>
-				open settings
-			</button>
+		<SidepanelLayout>
 			<ErrorBoundary fallback={<p>エラーです！</p>}>
 				<Outlet />
 			</ErrorBoundary>
-		</div>
+		</SidepanelLayout>
 	);
 }

@@ -1,9 +1,7 @@
 import { IconProgress } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import {
 	Button,
-	type Key,
 	ListBox,
 	ListBoxItem,
 	Popover,
@@ -14,32 +12,38 @@ import { getProjectsByProjectIdOrKeyStatusesOptions } from "@/client/@tanstack/r
 import { UiTooltip } from "@/components/Ui/Tooltip";
 
 type Props = {
-	status: ProjectStatus;
+	initialStatus: ProjectStatus;
+	value: number | undefined;
+	onChange: (value: number | undefined) => void;
 };
 
-export const IssueCommentFormStatus: React.FC<Props> = ({ status }) => {
-	const [selected, setSelected] = useState<Key>(status.id);
-
+export const IssueCommentFormStatus: React.FC<Props> = ({
+	initialStatus,
+	value,
+	onChange,
+}) => {
 	const { data = [] } = useQuery({
 		...getProjectsByProjectIdOrKeyStatusesOptions({
-			path: { projectIdOrKey: status.projectId },
+			path: { projectIdOrKey: initialStatus.projectId },
 		}),
 	});
 
-	const selectedIssue = data.find(({ id }) => id === selected);
+	const selectedStatus = data.find(({ id }) => id === value) || initialStatus;
 
 	return (
 		<Select
-			defaultSelectedKey={selected}
-			onSelectionChange={(value) => value != null && setSelected(value)}
+			defaultSelectedKey={value}
+			onSelectionChange={(value) =>
+				value != null && onChange(typeof value === "number" ? value : undefined)
+			}
 		>
-			<UiTooltip text={`ステータス: ${status.name}`}>
+			<UiTooltip text={`ステータス: ${selectedStatus.name}`}>
 				<Button
 					className="size-7 rounded grid place-items-center rounded-lg border transition text-white hover:bg-transparent"
 					style={({ isHovered }) => ({
-						borderColor: selectedIssue?.color,
-						backgroundColor: isHovered ? undefined : selectedIssue?.color,
-						color: isHovered ? selectedIssue?.color : undefined,
+						borderColor: selectedStatus?.color,
+						backgroundColor: isHovered ? undefined : selectedStatus?.color,
+						color: isHovered ? selectedStatus?.color : undefined,
 					})}
 				>
 					<IconProgress className="size-4" />

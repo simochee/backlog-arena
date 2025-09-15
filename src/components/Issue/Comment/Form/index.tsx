@@ -52,8 +52,24 @@ export const IssueCommentForm: React.FC<Props> = ({
 					)}
 				</form.Field>
 				<div className="flex items-center gap-1">
-					<IssueCommentFormStatus status={issue.status} />
-					<IssueCommentFormAssignee assignee={issue.assignee} />
+					<form.Field name="statusId">
+						{({ state, handleChange }) => (
+							<IssueCommentFormStatus
+								initialStatus={issue.status}
+								value={state.value}
+								onChange={handleChange}
+							/>
+						)}
+					</form.Field>
+					<form.Field name="assigneeId">
+						{({ state, handleChange }) => (
+							<IssueCommentFormAssignee
+								initialAssignee={issue.assignee}
+								value={state.value}
+								onChange={handleChange}
+							/>
+						)}
+					</form.Field>
 					<div className="ml-auto">
 						<form.Subscribe selector={(state) => [state.canSubmit] as const}>
 							{([canSubmit]) => (

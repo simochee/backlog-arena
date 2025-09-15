@@ -1,12 +1,10 @@
 import { IconUserQuestion } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { useState } from "react";
 import {
 	Autocomplete,
 	Button,
 	Input,
-	type Key,
 	ListBox,
 	ListBoxItem,
 	ListLayout,
@@ -22,30 +20,39 @@ import { BacklogImage } from "@/components/Backlog/Image";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 
 type Props = {
-	assignee: User | undefined;
+	initialAssignee: User | undefined;
+	value: number | undefined;
+	onChange: (value: number | undefined) => void;
 };
 
-export const IssueCommentFormAssignee: React.FC<Props> = ({ assignee }) => {
+export const IssueCommentFormAssignee: React.FC<Props> = ({
+	initialAssignee,
+	value,
+	onChange,
+}) => {
 	const { contains } = useFilter({ sensitivity: "base" });
-
-	const [selected, setSelected] = useState<Key | undefined>(assignee?.id);
 
 	const { data = [] } = useQuery({
 		...getUsersOptions(),
 	});
 
+	const selectedAssignee =
+		data.find(({ id }) => id === value) || initialAssignee;
+
 	return (
 		<Select
-			defaultSelectedKey={selected}
-			onSelectionChange={(value) => value != null && setSelected(value)}
+			defaultSelectedKey={selectedAssignee?.id}
+			onSelectionChange={(value) =>
+				value != null && onChange(typeof value === "number" ? value : undefined)
+			}
 		>
-			<UiTooltip text={`担当者: ${assignee?.name}`}>
+			<UiTooltip text={`担当者: ${selectedAssignee?.name}`}>
 				<Button className="size-7 grid place-items-center rounded p-1 rounded-lg border transition border-gray-300 hover:bg-green-100 hover:border-green-400">
-					{assignee ? (
+					{selectedAssignee ? (
 						<BacklogImage
 							className="rounded-full"
 							type="user"
-							variable={assignee.id}
+							variable={selectedAssignee.id}
 						/>
 					) : (
 						<IconUserQuestion className="size-4 text-green-600" />

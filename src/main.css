@@ -87,3 +87,44 @@
         @apply h-full;
     }
 }
+
+@layer components {
+    .react-mentions {
+        .react-mentions__input,
+        .react-mentions__highlighter {
+            @apply max-h-32 px-2 py-1;
+        }
+
+        .react-mentions__input {
+            @apply border border-gray-200 rounded-xs outline-none focus:shadow-[0_0_2px_var(--color-green-400)];
+        }
+
+        .react-mentions__highlighter {
+            @apply overflow-hidden;
+        }
+
+        strong {
+            @apply bg-cream-100 rounded-sm;
+        }
+
+        .react-mentions__suggestions {
+            @apply rounded overflow-hidden;
+        }
+
+        .react-mentions__suggestions__list {
+            @apply bg-white max-h-64 overflow-x-hidden overflow-y-auto;
+        }
+
+        .react-mentions__suggestions__item {
+            @apply px-4 py-2;
+        }
+
+        .react-mentions__suggestions__item--focused {
+            @apply bg-cream-50;
+        }
+
+        .react-mentions__suggestions__item__display {
+            @apply line-clamp-1;
+        }
+    }
+}

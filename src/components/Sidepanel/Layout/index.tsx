@@ -18,7 +18,7 @@ export const SidepanelLayout: React.FC<Props> = ({ children }) => {
 				<div className="flex items-center">
 					<UiTooltip text={`${space.name}`}>
 						<UiLink to={toUrl("/dashboard")} target="_blank">
-							<BacklogImage className="size-8" type="space" />
+							<BacklogImage className="size-8 rounded-lg" type="space" />
 						</UiLink>
 					</UiTooltip>
 				</div>

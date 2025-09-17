@@ -44,7 +44,7 @@ export const IssueCommentFormStatus: React.FC<Props> = ({
 					<IconProgress className="size-4" />
 				</Button>
 			</UiTooltip>
-			<Popover>
+			<Popover className="bg-white p-1 rounded border border-gray-200">
 				<UiListBox items={data}>
 					{({ name, color }) => (
 						<>

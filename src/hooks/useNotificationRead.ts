@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import {
 	getNotificationsOptions,
 	postNotificationsByIdMarkAsReadMutation,
@@ -26,6 +27,9 @@ export const useNotificationRead = () => {
 			});
 
 			return { previousData };
+		},
+		onSuccess: () => {
+			toast.success("Notification read successfully!");
 		},
 		onError: (_error, _variables, context) => {
 			if (context) {

@@ -1,5 +1,4 @@
 import { IconUserQuestion } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
 import {
 	Autocomplete,
@@ -13,30 +12,27 @@ import {
 	Virtualizer,
 } from "react-aria-components";
 import type { User } from "@/client";
-import { getUsersOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { BacklogImage } from "@/components/Backlog/Image";
 import { UiListBox } from "@/components/Ui/ListBox";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 
 type Props = {
 	initialAssignee: User | undefined;
+	users: User[];
 	value: number | undefined;
 	onChange: (value: number | undefined) => void;
 };
 
 export const IssueCommentFormAssignee: React.FC<Props> = ({
 	initialAssignee,
+	users,
 	value,
 	onChange,
 }) => {
 	const { contains } = useFilter({ sensitivity: "base" });
 
-	const { data = [] } = useQuery({
-		...getUsersOptions(),
-	});
-
 	const selectedAssignee =
-		data.find(({ id }) => id === value) || initialAssignee;
+		users.find(({ id }) => id === value) || initialAssignee;
 
 	return (
 		<Select
@@ -74,7 +70,7 @@ export const IssueCommentFormAssignee: React.FC<Props> = ({
 						/>
 					</SearchField>
 					<Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 28 }}>
-						<UiListBox items={data} className="h-48">
+						<UiListBox items={users} className="h-48">
 							{({ name }) => name}
 						</UiListBox>
 					</Virtualizer>

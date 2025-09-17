@@ -83,6 +83,9 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 
 	const [isCommentOpen, setIsCommentOpen] = useState(false);
 
+	const notificationUrl = toUrl(
+		`/globalbar/notifications/redirect/${notification.id}`,
+	);
 	const reasonText = getStatusText(reason);
 	const isPullRequest = [6, 10, 11, 12, 13].includes(reason);
 	const repository = repositories.find(
@@ -95,7 +98,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	return (
 		<GridListItem
 			id={notification.id}
-			href={toUrl(`/globalbar/notifications/redirect/${notification.id}`)}
+			href={notificationUrl}
 			target="_blank"
 			className={clsx(
 				"grid gap-1 p-2 border-b border-gray-300 focus-visible:bg-cream-50 hover:bg-cream-50",
@@ -129,6 +132,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 								/>
 								{issue && (
 									<IssueCommentPopover
+										href={notificationUrl}
 										issue={issue}
 										comment={comment}
 										isOpen={isCommentOpen}

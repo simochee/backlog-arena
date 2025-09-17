@@ -1,4 +1,5 @@
 import { IconCopy } from "@tabler/icons-react";
+import toast from "react-hot-toast";
 import type { GitRepository, Notification } from "@/client";
 import { NotificationAction } from "@/components/Notification/Action";
 import { useCurrentSpaceUrl } from "@/hooks/useCurrentSpaceUrl.ts";
@@ -28,6 +29,8 @@ export const NotificationCopyAction: React.FC<Props> = ({
 		});
 
 		await navigator.clipboard.write([clipboardItem]);
+
+		toast.success("Copied!");
 	};
 
 	switch (notification.reason) {

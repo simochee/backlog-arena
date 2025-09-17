@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import {
 	Dialog,
 	DialogTrigger,
@@ -14,12 +14,14 @@ import { UiDescription } from "@/components/Ui/Description";
 import { UiOverlayArrow } from "@/components/Ui/OverlayArrow";
 
 type Props = PopoverProps & {
+	href: string;
 	issue: Issue;
 	comment: Comment | undefined;
 	children: React.ReactNode;
 };
 
 export const IssueCommentPopover: React.FC<Props> = ({
+	href,
 	issue,
 	comment,
 	children,
@@ -77,11 +79,14 @@ export const IssueCommentPopover: React.FC<Props> = ({
 							{comment?.content || issue.description}
 						</UiDescription>
 					</p>
-					<IssueCommentForm
-						issue={issue}
-						isSubmitting={isPending}
-						onSubmit={handleSubmit}
-					/>
+					<Suspense fallback={<p>loading...</p>}>
+						<IssueCommentForm
+							href={href}
+							issue={issue}
+							isSubmitting={isPending}
+							onSubmit={handleSubmit}
+						/>
+					</Suspense>
 				</Dialog>
 			</Popover>
 		</DialogTrigger>

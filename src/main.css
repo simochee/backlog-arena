@@ -80,6 +80,9 @@
     --color-cream-800: #805013;
     --color-cream-900: #6d4116;
     --color-cream-950: #3f2109;
+
+    /* Shadows */
+    --shadow-focus: 0 0 3px var(--color-green-400);
 }
 
 @layer base {
@@ -92,7 +95,7 @@
     .react-mentions {
         .react-mentions__input,
         .react-mentions__highlighter {
-            @apply max-h-32 px-2 py-1;
+            @apply max-w-[80vw] max-h-32 px-2 py-1;
         }
 
         .react-mentions__input {

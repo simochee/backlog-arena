@@ -81,6 +81,7 @@ export const IssueCommentPopover: React.FC<Props> = ({
 					</p>
 					<Suspense fallback={<p>loading...</p>}>
 						<IssueCommentForm
+							type={comment ? "comment" : "issue"}
 							href={href}
 							issue={issue}
 							isSubmitting={isPending}

@@ -1,6 +1,7 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import { currentSpaceProfileStorage } from "@/storage/currentSpaceProfile/storage.ts";
 import { spaceProfilesStorage } from "@/storage/spaceProfiles/storage.ts";
+import { NoSpaceProfileError } from "@/utils/errors.ts";
 
 export const currentSpaceProfileOptions = queryOptions({
 	queryKey: ["currentSpaceProfileId"],
@@ -13,7 +14,7 @@ export const currentSpaceProfileOptions = queryOptions({
 			spaceProfiles[0];
 
 		if (!spaceProfile) {
-			throw new Error("No space profile found");
+			throw new NoSpaceProfileError();
 		}
 
 		return spaceProfile;

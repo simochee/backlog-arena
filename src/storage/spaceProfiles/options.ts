@@ -47,6 +47,18 @@ export const addSpaceProfileOptions = mutationOptions({
 	},
 });
 
+export const removeSpaceProfileOptions = mutationOptions({
+	mutationFn: async (id: string) => {
+		const { spaceProfiles } = await spaceProfilesStorage.getValue();
+
+		const newSpaceProfile = spaceProfiles.filter(
+			(spaceProfile) => spaceProfile.id !== id,
+		);
+
+		await spaceProfilesStorage.setValue({ spaceProfiles: newSpaceProfile });
+	},
+});
+
 export const setSpaceProfileCredentialsOptions = (spaceProfileId: string) =>
 	mutationOptions({
 		mutationFn: async (accessToken: Entity.OAuth2.AccessToken) => {

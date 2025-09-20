@@ -6,11 +6,12 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { client } from "@/client/client.gen";
 import { registerClientInterceptors } from "@/utils/client.ts";
+import { reactQueryConfig } from "@/utils/reactQuery.ts";
 import { routeTree } from "./routeTree.gen";
 
 registerClientInterceptors(client);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient(reactQueryConfig);
 
 const hashHistory = createHashHistory();
 const router = createRouter({ routeTree, history: hashHistory });

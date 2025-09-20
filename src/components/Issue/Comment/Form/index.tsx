@@ -14,6 +14,7 @@ import { UiLink } from "@/components/Ui/Link";
 import { UiTooltip } from "@/components/Ui/Tooltip";
 
 type Props = {
+	type?: "issue" | "comment";
 	href: string;
 	issue: Issue;
 	isSubmitting: boolean;
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export const IssueCommentForm: React.FC<Props> = ({
+	type = "command",
 	href,
 	issue,
 	isSubmitting,
@@ -49,7 +51,7 @@ export const IssueCommentForm: React.FC<Props> = ({
 	return (
 		<Form
 			ref={formRef}
-			className="w-full overflow-hidden"
+			className="w-full"
 			onSubmit={async (e) => {
 				e.preventDefault();
 				await form.handleSubmit();
@@ -105,7 +107,9 @@ export const IssueCommentForm: React.FC<Props> = ({
 						)}
 					</form.Field>
 					<div className="ml-auto flex items-center gap-1">
-						<UiTooltip text="課題を開く">
+						<UiTooltip
+							text={`${type === "comment" ? "コメント" : "課題"}を開く`}
+						>
 							<UiLink
 								className="size-7 grid place-items-center rounded p-1 rounded-lg border transition border-gray-300 hover:bg-green-100 hover:border-green-400"
 								to={href}

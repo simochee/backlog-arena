@@ -1,5 +1,5 @@
 import { IconCaretDownFilled } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Button,
 	Input,
@@ -21,11 +21,8 @@ export const SettingFieldSpaceDomain: React.FC<Props> = ({
 	onChange,
 	onBlur,
 }) => {
-	const [, defaultSpaceKey = "", defaultDomain = ".backlog.com"] =
-		/^([a-z0-9-]+)(\.backlog\.(?:com|jp))$/i.exec(defaultValue) || [];
-
-	const [spaceKey, setSpaceKey] = useState(defaultSpaceKey);
-	const [domain, setDomain] = useState(defaultDomain);
+	const [spaceKey, setSpaceKey] = useState("");
+	const [domain, setDomain] = useState("");
 
 	const handleChange = (inputSpaceKey: string, inputDomain: string) => {
 		setSpaceKey(inputSpaceKey);
@@ -34,19 +31,27 @@ export const SettingFieldSpaceDomain: React.FC<Props> = ({
 		onChange(`${inputSpaceKey}${inputDomain}`);
 	};
 
+	useEffect(() => {
+		const [, defaultSpaceKey = "", defaultDomain = ".backlog.com"] =
+			/^([a-z0-9-]+)(\.backlog\.(?:com|jp))$/i.exec(defaultValue) || [];
+
+		setSpaceKey(defaultSpaceKey);
+		setDomain(defaultDomain);
+	}, [defaultValue]);
+
 	return (
 		<div className="grid grid-cols-[1fr_140px] gap-1">
 			<Input
 				className="h-9 px-3 border rounded border-gray-500 outline-none focus:bg-cream-50 focus:border-green-600 focus:shadow-focus"
 				placeholder="スペースID"
-				defaultValue={defaultSpaceKey}
+				value={spaceKey}
 				onChange={(e) => handleChange(e.target.value, domain)}
 				onBlur={onBlur}
 			/>
 			<Select
 				aria-label="スペースドメイン"
 				className="w-full"
-				defaultSelectedKey={defaultDomain}
+				selectedKey={domain}
 				onSelectionChange={(key) => {
 					if (typeof key === "string") {
 						handleChange(spaceKey, key);

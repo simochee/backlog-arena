@@ -1,9 +1,11 @@
-import { IconDirectionSignFilled, IconLoader2 } from "@tabler/icons-react";
+import { IconCheck, IconUserScan, IconX } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "react-aria-components";
+import { Suspense } from "react";
+import { Checkbox, CheckboxGroup } from "react-aria-components";
 import * as z from "zod";
+import { BacklogImage } from "@/components/Backlog/Image";
 import { SettingFieldSpaceDomain } from "@/components/Setting/Field/SpaceDomain";
 import { UiButton } from "@/components/Ui/Button";
 import {
@@ -43,10 +45,6 @@ function RouteComponent() {
 			}),
 		},
 		onSubmit: async ({ value }) => {
-			console.log("on submit", value);
-
-			await new Promise((r) => setTimeout(r, 5000));
-
 			const result = await authorize(value.domain);
 			addSpaceProfileMutation(
 				{
@@ -65,8 +63,18 @@ function RouteComponent() {
 		},
 	});
 
+	const handleRemoveSpaceProfile = (id: string) => {
+		removeSpaceProfileMutation(id, {
+			onSettled: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: spaceProfilesOptions.queryKey,
+				});
+			},
+		});
+	};
+
 	return (
-		<div>
+		<div className="grid gap-6">
 			<div className="grid gap-3">
 				<div className="grid gap-1">
 					<h2 className="font-bold text-lg">別のスペースを追加</h2>
@@ -106,38 +114,68 @@ function RouteComponent() {
 							selector={(state) => [state.isSubmitting, state.canSubmit]}
 						>
 							{([isSubmitting, canSubmit]) => (
-								<Button
+								<UiButton
 									type="submit"
-									className="grid grid-cols-[1fr_auto] font-bold items-center gap-1 pl-3 pr-2 h-9 rounded bg-green-600 border-2 transition border-green-600 text-white cursor-pointer disabled:cursor-default hover:bg-transparent hover:text-green-600"
+									icon={IconUserScan}
 									isPending={isSubmitting}
 									isDisabled={!canSubmit}
 								>
-									{({ isPending }) => (
-										<>
-											認証
-											{isPending ? (
-												<IconLoader2 className="size-5 animate-spin" />
-											) : (
-												<IconDirectionSignFilled className="size-5" />
-											)}
-										</>
-									)}
-								</Button>
+									認証
+								</UiButton>
 							)}
 						</form.Subscribe>
 					</div>
 				</form>
-				<ul>
-					{data?.map(({ id, space }) => (
-						<li key={space.spaceKey}>
-							{space.name}
-							<UiButton onClick={() => removeSpaceProfileMutation(id)}>
+			</div>
+			<CheckboxGroup className="grid gap-2">
+				{data?.map(({ id, space, credentials }) => (
+					<div
+						key={space.spaceKey}
+						className="flex items-center justify-between gap-2 border border-gray-300 rounded-lg p-3"
+					>
+						<Checkbox value={id} className="group">
+							{({ isSelected }) => (
+								<div className="grid grid-cols-[auto_1fr] gap-2 items-center">
+									<div aria-hidden="true">
+										<div className="size-5 rounded group-focus-visible:shadow-focus grid place-items-center border-2 border-gray-300 group-selected:border-green-600 group-selected:bg-green-600">
+											{isSelected && (
+												<IconCheck className="size-4 text-white" />
+											)}
+										</div>
+									</div>
+									<div className="flex items-center gap-2 min-w-0">
+										<div className="flex-shrink-0">
+											<Suspense
+												fallback={<div className="size-7 bg-gray-200" />}
+											>
+												<BacklogImage
+													className="size-7"
+													type="space"
+													domain={space.domain}
+													accessToken={credentials.accessToken}
+												/>
+											</Suspense>
+										</div>
+										<h3 className="text-sm line-clamp-1 overflow-hidden">
+											{space.name}
+										</h3>
+									</div>
+								</div>
+							)}
+						</Checkbox>
+						<div className="flex flex-shrink-0 items-center gap-1">
+							<UiButton
+								variant="danger"
+								icon={IconX}
+								size="sm"
+								onClick={() => handleRemoveSpaceProfile(id)}
+							>
 								削除
 							</UiButton>
-						</li>
-					))}
-				</ul>
-			</div>
+						</div>
+					</div>
+				))}
+			</CheckboxGroup>
 		</div>
 	);
 }

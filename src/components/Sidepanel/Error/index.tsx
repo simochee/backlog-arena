@@ -2,10 +2,10 @@ import { IconExternalLink } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import type { FallbackProps } from "react-error-boundary";
-import { browser } from "wxt/browser";
 import { UiButton } from "@/components/Ui/Button";
 import { spaceProfilesStorage } from "@/storage/spaceProfiles/storage.ts";
 import { NoSpaceProfileError } from "@/utils/errors.ts";
+import { openSettings } from "@/utils/tab.ts";
 
 export const SidepanelError: React.FC<FallbackProps> = ({
 	error,
@@ -15,18 +15,6 @@ export const SidepanelError: React.FC<FallbackProps> = ({
 
 	const message =
 		error instanceof Error ? error.message : "不明なエラーが発生しました。";
-
-	const openSettings = async () => {
-		const { href: settingsUrl } = new URL("settings.html", location.origin);
-
-		const [settingsTab] = await browser.tabs.query({ url: settingsUrl });
-
-		if (settingsTab) {
-			await browser.tabs.update(settingsTab.id, { active: true });
-		} else {
-			await browser.tabs.create({ url: settingsUrl });
-		}
-	};
 
 	useEffect(() => {
 		return spaceProfilesStorage.watch(async () => {

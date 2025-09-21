@@ -21,7 +21,7 @@ export const UiListBox = <T extends object>({
 			items={items}
 		>
 			{(item) => (
-				<ListBoxItem className="flex items-center gap-2 gap-y-px px-2 py-1 rounded focus:bg-cream-100 pressed:bg-cream-100 outline-none">
+				<ListBoxItem className="flex items-center gap-2 gap-y-px px-2 py-1 cursor-pointer rounded focus:bg-cream-100 pressed:bg-cream-100 outline-none">
 					{children(item)}
 				</ListBoxItem>
 			)}

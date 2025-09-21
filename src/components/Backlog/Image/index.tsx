@@ -19,11 +19,12 @@ export const BacklogImage: React.FC<Props> = ({
 	className,
 	...props
 }) => {
-	const { data: currentSpaceProfile } = useQuery({
+	const { data } = useQuery({
 		...currentSpaceProfileOptions,
 		enabled: !spaceProfile,
-		initialData: spaceProfile,
 	});
+
+	const currentSpaceProfile = spaceProfile ?? data;
 
 	const { data: objectUrl, error } = useQuery({
 		enabled: !!currentSpaceProfile,

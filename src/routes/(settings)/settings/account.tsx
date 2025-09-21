@@ -111,12 +111,12 @@ function RouteComponent() {
 						value={defaultActiveSpaceProfiles}
 						onChange={handleSetSpaceProfileActivation}
 					>
-						{spaceProfiles.map(({ id, space, credentials }) => (
+						{spaceProfiles.map((spaceProfile) => (
 							<div
-								key={id}
+								key={spaceProfile.id}
 								className="flex items-center justify-between gap-2 border border-gray-300 rounded-lg p-3"
 							>
-								<Checkbox value={id} className="group">
+								<Checkbox value={spaceProfile.id} className="group">
 									{({ isSelected }) => (
 										<div className="grid grid-cols-[auto_1fr] gap-2 items-center">
 											<div aria-hidden="true">
@@ -134,13 +134,12 @@ function RouteComponent() {
 														<BacklogImage
 															className="size-7"
 															type="space"
-															domain={space.domain}
-															accessToken={credentials.accessToken}
+															spaceProfile={spaceProfile}
 														/>
 													</Suspense>
 												</div>
 												<h3 className="text-sm line-clamp-1 overflow-hidden">
-													{space.name}
+													{spaceProfile.space.name}
 												</h3>
 											</div>
 										</div>

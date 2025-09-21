@@ -150,7 +150,7 @@ function RouteComponent() {
 										variant="danger"
 										icon={IconX}
 										size="sm"
-										onClick={() => handleRemoveSpaceProfile(id)}
+										onClick={() => handleRemoveSpaceProfile(spaceProfile.id)}
 									>
 										削除
 									</UiButton>

@@ -10,6 +10,11 @@ export default defineConfig({
 		lint: "eslint",
 		path: "./src/client",
 	},
+	parser: {
+		pagination: {
+			keywords: ["maxId"],
+		},
+	},
 	plugins: [
 		"@hey-api/schemas",
 		"@hey-api/transformers",
@@ -22,6 +27,8 @@ export default defineConfig({
 		{
 			name: "@tanstack/react-query",
 			mutationOptions: true,
+			queryKeys: false,
+			infiniteQueryOptions: true,
 		},
 	],
 });

@@ -861,6 +861,36 @@ paths:
     get:
       description: お知らせ一覧の取得
       summary: 自分の受け取ったお知らせの一覧を取得します。
+      parameters:
+        - schema:
+            type: number
+          required: false
+          name: minId
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: maxId
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: count
+          in: query
+        - schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+          required: false
+          name: order
+          in: query
+        - schema:
+            type: number
+          required: false
+          name: senderId
+          in: query
       responses:
         "200":
           description: レスポンスボディ

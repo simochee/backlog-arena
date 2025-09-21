@@ -7,7 +7,15 @@ export default {
 	path: "/notifications",
 	description: "お知らせ一覧の取得",
 	summary: "自分の受け取ったお知らせの一覧を取得します。",
-	request: {},
+	request: {
+		query: z.object({
+			minId: z.number().optional(),
+			maxId: z.number().optional(),
+			count: z.number().optional(),
+			order: z.enum(["asc", "desc"]).default("desc"),
+			senderId: z.number().optional(),
+		}),
+	},
 	responses: {
 		200: {
 			description: "レスポンスボディ",

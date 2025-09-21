@@ -34,7 +34,7 @@ export const IssueCommentFormStatus: React.FC<Props> = ({
 		>
 			<UiTooltip text={`ステータス: ${selectedStatus.name}`}>
 				<Button
-					className="size-7 rounded grid place-items-center rounded-lg border transition text-white hover:bg-transparent"
+					className="cursor-pointer size-7 rounded grid place-items-center rounded-lg border transition text-white hover:bg-transparent"
 					style={({ isHovered }) => ({
 						borderColor: selectedStatus?.color,
 						backgroundColor: isHovered ? undefined : selectedStatus?.color,

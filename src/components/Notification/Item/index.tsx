@@ -139,6 +139,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 										href={notificationUrl}
 										issue={issue}
 										comment={comment}
+										sender={sender}
 										isOpen={isCommentOpen}
 										onOpenChange={setIsCommentOpen}
 									>

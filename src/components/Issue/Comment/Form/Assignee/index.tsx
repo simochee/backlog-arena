@@ -42,10 +42,10 @@ export const IssueCommentFormAssignee: React.FC<Props> = ({
 			}
 		>
 			<UiTooltip text={`担当者: ${selectedAssignee?.name}`}>
-				<Button className="size-7 grid place-items-center rounded p-1 rounded-lg border transition border-gray-300 hover:bg-green-100 hover:border-green-400">
+				<Button className="cursor-pointer size-7 grid place-items-center rounded p-1 rounded-lg border transition border-gray-300 hover:bg-green-100 hover:border-green-400">
 					{selectedAssignee ? (
 						<BacklogImage
-							className="rounded-full"
+							className="rounded-full size-full"
 							type="user"
 							variable={selectedAssignee.id}
 						/>

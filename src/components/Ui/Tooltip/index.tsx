@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import {
-	Button,
+	Pressable,
 	Tooltip,
 	type TooltipProps,
 	TooltipTrigger,
@@ -36,7 +36,7 @@ export const UiTooltip: React.FC<Props> = ({
 				<UiOverlayArrow className="text-gray-900" />
 				{text}
 			</Tooltip>
-			{nonInteractive ? <Button>{children}</Button> : children}
+			{nonInteractive ? <Pressable>{children}</Pressable> : children}
 		</TooltipTrigger>
 	);
 };

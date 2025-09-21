@@ -12,7 +12,7 @@ type Props = ButtonProps & {
 export const UiButton: React.FC<Props> = ({
 	variant = "primary",
 	size = "md",
-	icon: IconComponent,
+	icon,
 	children,
 	...props
 }) => {
@@ -26,11 +26,13 @@ export const UiButton: React.FC<Props> = ({
 	});
 
 	const sizeClassName = clsx({
-		"px-2 h-7": size === "sm" && IconComponent == null,
-		"pl-2 pr-1 h-7": size === "sm" && IconComponent != null,
-		"px-3 h-9": size === "md" && IconComponent == null,
-		"pl-3 pr-2 h-9": size === "md" && IconComponent != null,
+		"px-2 h-7": size === "sm" && icon == null,
+		"pl-2 pr-1 h-7": size === "sm" && icon != null,
+		"px-3 h-9": size === "md" && icon == null,
+		"pl-3 pr-2 h-9": size === "md" && icon != null,
 	});
+
+	const Icon = icon && props.isPending ? IconLoader2 : icon;
 
 	return (
 		<Button
@@ -42,13 +44,15 @@ export const UiButton: React.FC<Props> = ({
 			)}
 		>
 			<span className="flex-grow-1">{children}</span>
-			{IconComponent && (
+			{Icon && (
 				<span className="flex-shrink-0">
-					{props.isPending ? (
-						<IconLoader2 className="size-5 animate-spin" />
-					) : (
-						<IconComponent className="size-5" />
-					)}
+					<Icon
+						className={clsx({
+							"size-5": size === "md",
+							"size-4": size === "sm",
+							"animate-spin": props.isPending,
+						})}
+					/>
 				</span>
 			)}
 		</Button>

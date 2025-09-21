@@ -1,9 +1,8 @@
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconExternalLink, IconSend2 } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Form } from "react-aria-components";
-import { Mention, MentionsInput } from "react-mentions";
-import { useMeasure } from "react-use";
+import TextareaAutosize from "react-textarea-autosize";
 import type { Issue, PatchIssuesByIssueIdOrKeyData } from "@/client";
 import { getUsersOptions } from "@/client/@tanstack/react-query.gen.ts";
 import { zPatchIssuesByIssueIdOrKeyData } from "@/client/zod.gen";
@@ -28,9 +27,7 @@ export const IssueCommentForm: React.FC<Props> = ({
 	isSubmitting,
 	onSubmit,
 }) => {
-	const [formRef, { width: formWidth }] = useMeasure<HTMLFormElement>();
-
-	const { data = [] } = useSuspenseQuery({
+	const { data = [] } = useQuery({
 		...getUsersOptions(),
 	});
 
@@ -50,7 +47,6 @@ export const IssueCommentForm: React.FC<Props> = ({
 
 	return (
 		<Form
-			ref={formRef}
 			className="w-full"
 			onSubmit={async (e) => {
 				e.preventDefault();
@@ -58,34 +54,19 @@ export const IssueCommentForm: React.FC<Props> = ({
 			}}
 		>
 			<div className="grid gap-1">
-				<form.Subscribe selector={(state) => state.values.description}>
-					{() => (
-						<form.Field name="comment">
-							{({ state, handleChange, handleBlur }) => (
-								<MentionsInput
-									className="react-mentions"
-									style={{
-										input: { width: formWidth, overflow: "auto" },
-										highlighter: { width: formWidth },
-									}}
-									value={state.value}
-									allowSpaceInQuery
-									onChange={(e) => handleChange(e.target.value)}
-									onBlur={handleBlur}
-								>
-									<Mention
-										trigger="@"
-										data={data.map(({ id, name }) => ({ id, display: name }))}
-										markup="<@U__id__>"
-										displayTransform={(id) =>
-											`@${data.find((user) => user.id.toString() === id)?.name}`
-										}
-									/>
-								</MentionsInput>
-							)}
-						</form.Field>
+				<form.Field name="comment">
+					{({ state, handleChange, handleBlur }) => (
+						<TextareaAutosize
+							autoFocus
+							className="w-full border border-gray-400 rounded px-3 py-2 resize-none focus:bg-cream-50 focus:shadow-focus  focus:border-green-600 outline-none"
+							placeholder="コメント（@メンションには非対応）"
+							maxRows={8}
+							defaultValue={state.value}
+							onChange={(e) => handleChange(e.target.value)}
+							onBlur={handleBlur}
+						/>
 					)}
-				</form.Subscribe>
+				</form.Field>
 				<div className="flex items-center gap-1">
 					<form.Field name="statusId">
 						{({ state, handleChange }) => (
@@ -125,8 +106,9 @@ export const IssueCommentForm: React.FC<Props> = ({
 									size="sm"
 									isPending={isSubmitting}
 									isDisabled={!canSubmit}
+									icon={IconSend2}
 								>
-									{isSubmitting ? "送信中..." : "送信"}
+									送信
 								</UiButton>
 							)}
 						</form.Subscribe>

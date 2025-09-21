@@ -17,8 +17,6 @@ export const SidepanelError: React.FC<FallbackProps> = ({
 
 	useEffect(() => {
 		return spaceProfilesStorage.watch(async () => {
-			console.log("watch");
-
 			queryClient.clear();
 			resetErrorBoundary();
 		});

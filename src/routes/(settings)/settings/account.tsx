@@ -149,6 +149,7 @@ function RouteComponent() {
 				</form>
 			</div>
 			<CheckboxGroup
+				aria-label="登録されているスペースの一覧"
 				className="grid gap-2"
 				defaultValue={defaultActiveSpaceProfiles}
 				onChange={handleSetSpaceProfileActivation}
@@ -158,11 +159,7 @@ function RouteComponent() {
 						key={id}
 						className="flex items-center justify-between gap-2 border border-gray-300 rounded-lg p-3"
 					>
-						<Checkbox
-							value={id}
-							className="group"
-							aria-label="スペースプロファイルの有効状態"
-						>
+						<Checkbox value={id} className="group">
 							{({ isSelected }) => (
 								<div className="grid grid-cols-[auto_1fr] gap-2 items-center">
 									<div aria-hidden="true">

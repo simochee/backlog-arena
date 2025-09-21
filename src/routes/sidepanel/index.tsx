@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { GridList } from "react-aria-components";
 import { getNotificationsOptions } from "@/client/@tanstack/react-query.gen.ts";
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/sidepanel/")({
 });
 
 function RouteComponent() {
-	const { data = [] } = useQuery({
+	const { data = [] } = useSuspenseQuery({
 		...getNotificationsOptions(),
 		refetchInterval: 60 * 1000,
 	});

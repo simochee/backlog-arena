@@ -5,7 +5,6 @@ export const reactQueryConfig: QueryClientConfig = {
 		queries: {
 			retry: (failureCount, error) => {
 				console.log("Retrying to retry retry", { failureCount, error });
-
 				return false;
 			},
 		},

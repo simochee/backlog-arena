@@ -52,6 +52,7 @@ export const addSpaceProfileOptions = mutationOptions({
 
 export const removeSpaceProfileOptions = mutationOptions({
 	mutationFn: async (id: string) => {
+		// スペースプロファイルから削除
 		const { spaceProfiles } = await spaceProfilesStorage.getValue();
 
 		const newSpaceProfile = spaceProfiles.filter(

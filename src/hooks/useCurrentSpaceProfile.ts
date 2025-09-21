@@ -6,7 +6,11 @@ import { spaceProfilesStorage } from "@/storage/spaceProfiles/storage.ts";
 
 export const useCurrentSpaceProfile = () => {
 	const queryClient = useQueryClient();
-	const { data } = useSuspenseQuery(currentSpaceProfileOptions);
+	const { data, error } = useSuspenseQuery(currentSpaceProfileOptions);
+
+	if (error) {
+		throw error;
+	}
 
 	useEffect(() => {
 		return currentSpaceProfileStorage.watch(async () => {

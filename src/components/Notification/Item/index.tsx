@@ -27,6 +27,8 @@ type Props = {
 	notification: Notification;
 };
 
+const timeFormat = new Intl.DateTimeFormat("ja-JP", { timeStyle: "short" });
+
 const getStatusText = (reason: NotificationReason) => {
 	switch (reason) {
 		case 1:
@@ -67,6 +69,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		comment,
 		sender,
 		resourceAlreadyRead,
+		created,
 	} = notification;
 
 	const { data: repositories = [] } = useQuery({
@@ -100,9 +103,10 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 			id={notification.id}
 			href={notificationUrl}
 			target="_blank"
+			textValue={subject}
 			className={clsx(
 				"grid gap-1 p-2 border-b border-gray-300 focus-visible:bg-cream-50 hover:bg-cream-50",
-				resourceAlreadyRead ? "bg-gray-100" : "",
+				resourceAlreadyRead ? "bg-gray-100" : "bg-white",
 			)}
 		>
 			{({ isHovered }) => (
@@ -158,9 +162,9 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 								/>
 							</div>
 						) : (
-							<div>
-								<p>20:30</p>
-							</div>
+							<time dateTime={created}>
+								{timeFormat.format(new Date(created))}
+							</time>
 						)}
 					</div>
 					<p className="line-clamp-1 text-sm min-h-[1.5em]">

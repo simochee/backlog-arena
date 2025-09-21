@@ -1,25 +1,33 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
-	getNotificationsOptions,
+	getNotificationsInfiniteOptions,
 	postNotificationsByIdMarkAsReadMutation,
 } from "@/client/@tanstack/react-query.gen.ts";
 
 export const useNotificationRead = () => {
 	const queryClient = useQueryClient();
 
-	const { queryKey } = getNotificationsOptions();
+	const { queryKey } = getNotificationsInfiniteOptions({
+		query: { count: 10 },
+	});
 
 	return useMutation({
 		...postNotificationsByIdMarkAsReadMutation(),
 		onMutate: ({ path: { id } }) => {
 			const previousData = queryClient.getQueryData(queryKey);
 
-			queryClient.setQueryData(queryKey, (data = []) => {
-				for (const item of data) {
-					if (item.id === id) {
-						item.alreadyRead = true;
-						item.resourceAlreadyRead = true;
+			queryClient.setQueryData(queryKey, (data) => {
+				if (data) {
+					for (const page of data.pages) {
+						for (const item of page) {
+							if (item.id === id) {
+								console.log(item);
+
+								item.alreadyRead = true;
+								item.resourceAlreadyRead = true;
+							}
+						}
 					}
 				}
 

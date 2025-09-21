@@ -11,11 +11,12 @@ import { Checkbox, CheckboxGroup } from "react-aria-components";
 import * as z from "zod";
 import { BacklogImage } from "@/components/Backlog/Image";
 import { SettingFieldSpaceDomain } from "@/components/Setting/Field/SpaceDomain";
+import { SettingsHeading } from "@/components/Settings/Heading";
 import { UiButton } from "@/components/Ui/Button";
 import {
 	addSpaceProfileOptions,
 	removeSpaceProfileOptions,
-	setSpaceProfileConfigurationOptions,
+	setSpaceProfileActivationsOptions,
 	spaceProfilesOptions,
 } from "@/storage/spaceProfiles/options.ts";
 import { authorize } from "@/utils/authorize.ts";
@@ -34,8 +35,8 @@ function RouteComponent() {
 	const { mutate: removeSpaceProfileMutation } = useMutation({
 		...removeSpaceProfileOptions,
 	});
-	const { mutate: setSpaceProfileConfigurationMutation } = useMutation({
-		...setSpaceProfileConfigurationOptions,
+	const { mutate: setSpaceProfileActivationsMutation } = useMutation({
+		...setSpaceProfileActivationsOptions,
 	});
 
 	const defaultActiveSpaceProfiles = spaceProfiles
@@ -86,24 +87,88 @@ function RouteComponent() {
 	};
 
 	const handleSetSpaceProfileActivation = (activeSpaceProfiles: string[]) => {
-		for (const { id } of spaceProfiles) {
-			setSpaceProfileConfigurationMutation({
-				id,
-				isDisabled: !activeSpaceProfiles.includes(id),
-			});
-		}
+		setSpaceProfileActivationsMutation(activeSpaceProfiles, {
+			onSettled: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: spaceProfilesOptions.queryKey,
+				});
+			},
+		});
 	};
 
 	return (
-		<div className="grid gap-6">
+		<div className="grid gap-8">
 			<div className="grid gap-3">
-				<div className="grid gap-1">
-					<h2 className="font-bold text-lg">別のスペースを追加</h2>
-					<p className="text-gray-800">
-						別のスペースを Backlog Arena
-						に登録するために、アカウントへ拡張機能からのアクセスを許可します。
+				<SettingsHeading title="アカウントとスペース">
+					<p>
+						このブラウザに登録されている Backlog スペースごとのアカウントです。
 					</p>
-				</div>
+				</SettingsHeading>
+				{spaceProfiles.length > 0 ? (
+					<CheckboxGroup
+						aria-label="登録されているスペースの一覧"
+						className="grid gap-2"
+						value={defaultActiveSpaceProfiles}
+						onChange={handleSetSpaceProfileActivation}
+					>
+						{spaceProfiles.map(({ id, space, credentials }) => (
+							<div
+								key={id}
+								className="flex items-center justify-between gap-2 border border-gray-300 rounded-lg p-3"
+							>
+								<Checkbox value={id} className="group">
+									{({ isSelected }) => (
+										<div className="grid grid-cols-[auto_1fr] gap-2 items-center">
+											<div aria-hidden="true">
+												<div className="size-5 rounded group-focus-visible:shadow-focus grid place-items-center border-2 border-gray-300 group-selected:border-green-600 group-selected:bg-green-600">
+													{isSelected && (
+														<IconCheck className="size-4 text-white" />
+													)}
+												</div>
+											</div>
+											<div className="flex items-center gap-2 min-w-0">
+												<div className="flex-shrink-0">
+													<Suspense
+														fallback={<div className="size-7 bg-gray-200" />}
+													>
+														<BacklogImage
+															className="size-7"
+															type="space"
+															domain={space.domain}
+															accessToken={credentials.accessToken}
+														/>
+													</Suspense>
+												</div>
+												<h3 className="text-sm line-clamp-1 overflow-hidden">
+													{space.name}
+												</h3>
+											</div>
+										</div>
+									)}
+								</Checkbox>
+								<div className="flex flex-shrink-0 items-center gap-1">
+									<UiButton
+										variant="danger"
+										icon={IconX}
+										size="sm"
+										onClick={() => handleRemoveSpaceProfile(id)}
+									>
+										削除
+									</UiButton>
+								</div>
+							</div>
+						))}
+					</CheckboxGroup>
+				) : (
+					<div className="grid place-items-center h-13 box-content border border-gray-100 rounded-lg bg-gray-50">
+						<p className="text-center">スペースが登録されていません</p>
+					</div>
+				)}
+			</div>
+			<div className="grid gap-3">
+				<SettingsHeading title="別のアカウントにサインイン">
+					<p>このブラウザに別のスペースのアカウントでサインインします。</p>
+				</SettingsHeading>
 				<form
 					onSubmit={async (e) => {
 						e.preventDefault();
@@ -148,60 +213,6 @@ function RouteComponent() {
 					</div>
 				</form>
 			</div>
-			<CheckboxGroup
-				aria-label="登録されているスペースの一覧"
-				className="grid gap-2"
-				defaultValue={defaultActiveSpaceProfiles}
-				onChange={handleSetSpaceProfileActivation}
-			>
-				{spaceProfiles.map(({ id, space, credentials }) => (
-					<div
-						key={id}
-						className="flex items-center justify-between gap-2 border border-gray-300 rounded-lg p-3"
-					>
-						<Checkbox value={id} className="group">
-							{({ isSelected }) => (
-								<div className="grid grid-cols-[auto_1fr] gap-2 items-center">
-									<div aria-hidden="true">
-										<div className="size-5 rounded group-focus-visible:shadow-focus grid place-items-center border-2 border-gray-300 group-selected:border-green-600 group-selected:bg-green-600">
-											{isSelected && (
-												<IconCheck className="size-4 text-white" />
-											)}
-										</div>
-									</div>
-									<div className="flex items-center gap-2 min-w-0">
-										<div className="flex-shrink-0">
-											<Suspense
-												fallback={<div className="size-7 bg-gray-200" />}
-											>
-												<BacklogImage
-													className="size-7"
-													type="space"
-													domain={space.domain}
-													accessToken={credentials.accessToken}
-												/>
-											</Suspense>
-										</div>
-										<h3 className="text-sm line-clamp-1 overflow-hidden">
-											{space.name}
-										</h3>
-									</div>
-								</div>
-							)}
-						</Checkbox>
-						<div className="flex flex-shrink-0 items-center gap-1">
-							<UiButton
-								variant="danger"
-								icon={IconX}
-								size="sm"
-								onClick={() => handleRemoveSpaceProfile(id)}
-							>
-								削除
-							</UiButton>
-						</div>
-					</div>
-				))}
-			</CheckboxGroup>
 		</div>
 	);
 }

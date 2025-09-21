@@ -1,10 +1,7 @@
 import { mutationOptions, queryOptions } from "@tanstack/react-query";
 import type { Entity } from "backlog-js";
 import type { Space, User } from "@/client";
-import type {
-	SpaceProfile,
-	SpaceProfileConfiguration,
-} from "@/storage/spaceProfiles/types.ts";
+import type { SpaceProfile } from "@/storage/spaceProfiles/types.ts";
 import { spaceProfilesStorage } from "./storage";
 
 export const spaceProfilesOptions = queryOptions({
@@ -63,44 +60,16 @@ export const removeSpaceProfileOptions = mutationOptions({
 	},
 });
 
-export const setSpaceProfileConfigurationOptions = mutationOptions({
-	mutationFn: async (variables: { id: string } & SpaceProfileConfiguration) => {
-		const { id, ...configuration } = variables;
+export const setSpaceProfileActivationsOptions = mutationOptions({
+	mutationFn: async (activeSpaceProfiles: string[]) => {
 		const { spaceProfiles } = await spaceProfilesStorage.getValue();
 
-		const newSpaceProfile = spaceProfiles.map((spaceProfile) => {
-			spaceProfile.configuration = {
-				...spaceProfile.configuration,
-				...configuration,
-			};
+		for (const spaceProfile of spaceProfiles) {
+			spaceProfile.configuration.isDisabled = !activeSpaceProfiles.includes(
+				spaceProfile.id,
+			);
+		}
 
-			return spaceProfile;
-		});
-
-		await spaceProfilesStorage.setValue({ spaceProfiles: newSpaceProfile });
+		await spaceProfilesStorage.setValue({ spaceProfiles });
 	},
 });
-
-export const setSpaceProfileCredentialsOptions = (spaceProfileId: string) =>
-	mutationOptions({
-		mutationFn: async (accessToken: Entity.OAuth2.AccessToken) => {
-			if (!spaceProfileId) return;
-
-			const storageValue = await spaceProfilesStorage.getValue();
-
-			storageValue.spaceProfiles = storageValue.spaceProfiles.map(
-				(spaceProfile) => {
-					if (spaceProfile.id !== spaceProfileId) return spaceProfile;
-
-					spaceProfile.credentials = {
-						authType: "Bearer",
-						accessToken: accessToken.access_token,
-						refreshToken: accessToken.refresh_token,
-					};
-					return spaceProfile;
-				},
-			);
-
-			await spaceProfilesStorage.setValue(storageValue);
-		},
-	});

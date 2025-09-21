@@ -7,11 +7,14 @@ export const currentSpaceProfileOptions = queryOptions({
 	queryKey: ["currentSpaceProfileId"],
 	queryFn: async () => {
 		const { spaceProfiles } = await spaceProfilesStorage.getValue();
+		const activeSpaceProfiles = spaceProfiles.filter(
+			({ configuration }) => !configuration.isDisabled,
+		);
 		const currentSpaceProfile = await currentSpaceProfileStorage.getValue();
 
 		const spaceProfile =
-			spaceProfiles.find(({ id }) => id === currentSpaceProfile?.id) ||
-			spaceProfiles[0];
+			activeSpaceProfiles.find(({ id }) => id === currentSpaceProfile?.id) ||
+			activeSpaceProfiles[0];
 
 		if (!spaceProfile) {
 			throw new NoSpaceProfileError();

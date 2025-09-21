@@ -13,9 +13,13 @@ const getCurrentSpaceProfile = async () => {
 		currentSpaceProfileStorage.getValue(),
 	]);
 
+	const activeSpaceProfiles = spaceProfiles.filter(
+		({ configuration }) => !configuration.isDisabled,
+	);
+
 	const spaceProfile =
-		spaceProfiles.find(({ id }) => id === currentSpaceProfile?.id) ||
-		spaceProfiles[0];
+		activeSpaceProfiles.find(({ id }) => id === currentSpaceProfile?.id) ||
+		activeSpaceProfiles[0];
 
 	if (!spaceProfile) {
 		throw new Error("Unable to get space profile");

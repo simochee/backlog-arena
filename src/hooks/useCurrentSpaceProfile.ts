@@ -4,11 +4,11 @@ import { currentSpaceProfileOptions } from "@/storage/currentSpaceProfile/option
 import { currentSpaceProfileStorage } from "@/storage/currentSpaceProfile/storage.ts";
 import { spaceProfilesStorage } from "@/storage/spaceProfiles/storage.ts";
 
-export const useCurrentSpaceProfile = () => {
+export const useCurrentSpaceProfile = (throwOnError = true) => {
 	const queryClient = useQueryClient();
 	const { data, error } = useSuspenseQuery(currentSpaceProfileOptions);
 
-	if (error) {
+	if (throwOnError && error) {
 		throw error;
 	}
 

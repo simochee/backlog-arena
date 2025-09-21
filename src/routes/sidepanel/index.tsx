@@ -14,6 +14,8 @@ function RouteComponent() {
 		refetchInterval: 60 * 1000,
 	});
 
+	console.log(getNotificationsOptions().queryKey);
+
 	return (
 		<div>
 			<GridList items={data}>

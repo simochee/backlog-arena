@@ -89,6 +89,10 @@
     html, body, #root {
         @apply h-full;
     }
+
+    #root {
+        @apply bg-gray-50;
+    }
 }
 
 @layer components {

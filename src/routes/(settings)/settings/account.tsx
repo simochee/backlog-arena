@@ -1,6 +1,10 @@
 import { IconCheck, IconUserScan, IconX } from "@tabler/icons-react";
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { Checkbox, CheckboxGroup } from "react-aria-components";
@@ -11,6 +15,7 @@ import { UiButton } from "@/components/Ui/Button";
 import {
 	addSpaceProfileOptions,
 	removeSpaceProfileOptions,
+	setSpaceProfileConfigurationOptions,
 	spaceProfilesOptions,
 } from "@/storage/spaceProfiles/options.ts";
 import { authorize } from "@/utils/authorize.ts";
@@ -21,7 +26,7 @@ export const Route = createFileRoute("/(settings)/settings/account")({
 
 function RouteComponent() {
 	const queryClient = useQueryClient();
-	const { data } = useQuery(spaceProfilesOptions);
+	const { data: spaceProfiles } = useSuspenseQuery(spaceProfilesOptions);
 	const { mutate: addSpaceProfileMutation } = useMutation(
 		addSpaceProfileOptions,
 	);
@@ -29,6 +34,13 @@ function RouteComponent() {
 	const { mutate: removeSpaceProfileMutation } = useMutation({
 		...removeSpaceProfileOptions,
 	});
+	const { mutate: setSpaceProfileConfigurationMutation } = useMutation({
+		...setSpaceProfileConfigurationOptions,
+	});
+
+	const defaultActiveSpaceProfiles = spaceProfiles
+		.filter(({ configuration }) => !configuration.isDisabled)
+		.map(({ id }) => id);
 
 	const form = useForm({
 		defaultValues: {
@@ -73,6 +85,15 @@ function RouteComponent() {
 		});
 	};
 
+	const handleSetSpaceProfileActivation = (activeSpaceProfiles: string[]) => {
+		for (const { id } of spaceProfiles) {
+			setSpaceProfileConfigurationMutation({
+				id,
+				isDisabled: !activeSpaceProfiles.includes(id),
+			});
+		}
+	};
+
 	return (
 		<div className="grid gap-6">
 			<div className="grid gap-3">
@@ -84,10 +105,10 @@ function RouteComponent() {
 					</p>
 				</div>
 				<form
-					onSubmit={(e) => {
+					onSubmit={async (e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						form.handleSubmit();
+						await form.handleSubmit();
 					}}
 				>
 					<div className="grid grid-cols-[1fr_auto] gap-2">
@@ -127,13 +148,21 @@ function RouteComponent() {
 					</div>
 				</form>
 			</div>
-			<CheckboxGroup className="grid gap-2">
-				{data?.map(({ id, space, credentials }) => (
+			<CheckboxGroup
+				className="grid gap-2"
+				defaultValue={defaultActiveSpaceProfiles}
+				onChange={handleSetSpaceProfileActivation}
+			>
+				{spaceProfiles.map(({ id, space, credentials }) => (
 					<div
-						key={space.spaceKey}
+						key={id}
 						className="flex items-center justify-between gap-2 border border-gray-300 rounded-lg p-3"
 					>
-						<Checkbox value={id} className="group">
+						<Checkbox
+							value={id}
+							className="group"
+							aria-label="スペースプロファイルの有効状態"
+						>
 							{({ isSelected }) => (
 								<div className="grid grid-cols-[auto_1fr] gap-2 items-center">
 									<div aria-hidden="true">

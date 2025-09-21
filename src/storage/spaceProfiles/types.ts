@@ -15,6 +15,7 @@ export type SpaceProfileUser = {
 };
 
 export type SpaceProfileConfiguration = Partial<{
+	isDisabled: boolean;
 	showOnBadge: boolean;
 }>;
 

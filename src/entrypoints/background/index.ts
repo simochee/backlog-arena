@@ -6,8 +6,8 @@ const setBadgeCount = (count: number) => {
 		return;
 	}
 
-	browserAction.setBadgeText({ text: " " });
-	browserAction.setBadgeBackgroundColor?.({ color: "#fe1aaf" });
+	// browserAction.setBadgeText({ text: " " });
+	// browserAction.setBadgeBackgroundColor?.({ color: "#fe1aaf" });
 };
 
 const updateNotificationCount = async () => {
